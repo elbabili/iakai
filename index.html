@@ -20,56 +20,10 @@
         >
 
         <section class="contact-section">
-            <button class="contact-toggle" id="contactToggle" aria-expanded="false">
-                CONTACT
-            </button>
-            
-            <form 
-                class="contact-form" 
-                id="contactForm"
-                action="https://api.web3forms.com/submit" 
-                method="POST"
-            >
-                <input type="hidden" name="access_key" value="b053f5f6-ab07-4471-8e8e-f742dd806a20">
-                <input type="hidden" name="subject" value="Nouveau message depuis iakai.fr">
-                <input type="hidden" name="redirect" value="https://iakai.fr?success=true">
-                
-                <div class="form-group">
-                    <input 
-                        type="text" 
-                        name="name" 
-                        placeholder="Nom" 
-                        required
-                    >
-                </div>
-                
-                <div class="form-group">
-                    <input 
-                        type="email" 
-                        name="email" 
-                        placeholder="Email" 
-                        required
-                    >
-                </div>
-                
-                <div class="form-group">
-                    <textarea 
-                        name="message" 
-                        placeholder="Message" 
-                        required
-                    ></textarea>
-                </div>
-                
-                <button type="submit" class="submit-btn">ENVOYER</button>
-            </form>
-
-            <p class="success-message" id="successMessage">
-                Merci, votre message a été envoyé.
-            </p>
+            <a href="mailto:contact@iakai.fr" class="contact-link">CONTACT</a>
         </section>
 
     </main>
 
-    <script src="script.js"></script>
 </body>
 </html>

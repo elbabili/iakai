@@ -131,116 +131,28 @@ body {
         0 0 160px rgba(139, 105, 20, 0.15);
 }
 
-/* Formulaire de contact */
+/* Contact */
 .contact-section {
     margin-top: 4rem;
-    width: 100%;
-    max-width: 400px;
     opacity: 0.7;
     transition: opacity 0.5s ease;
 }
 
-.contact-section:hover,
-.contact-section:focus-within {
+.contact-section:hover {
     opacity: 1;
 }
 
-.contact-toggle {
-    background: none;
-    border: none;
+.contact-link {
     color: var(--gris-clair);
-    font-family: inherit;
+    text-decoration: none;
     font-size: 0.9rem;
     letter-spacing: 0.15em;
-    cursor: pointer;
     padding: 0.5rem 1rem;
     transition: color 0.3s ease;
-    display: block;
-    margin: 0 auto;
 }
 
-.contact-toggle:hover {
+.contact-link:hover {
     color: var(--or-lumiere);
-}
-
-.contact-form {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.6s ease, opacity 0.4s ease;
-    opacity: 0;
-}
-
-.contact-form.open {
-    max-height: 400px;
-    opacity: 1;
-    margin-top: 1.5rem;
-}
-
-.form-group {
-    margin-bottom: 1rem;
-}
-
-.form-group input,
-.form-group textarea {
-    width: 100%;
-    background: rgba(26, 20, 14, 0.6);
-    border: 1px solid var(--ocre-sombre);
-    color: var(--blanc-lumiere);
-    font-family: inherit;
-    font-size: 0.95rem;
-    padding: 0.8rem 1rem;
-    border-radius: 2px;
-    transition: border-color 0.3s ease, background 0.3s ease;
-}
-
-.form-group input::placeholder,
-.form-group textarea::placeholder {
-    color: var(--gris-clair);
-    opacity: 0.6;
-}
-
-.form-group input:focus,
-.form-group textarea:focus {
-    outline: none;
-    border-color: var(--ocre-dore);
-    background: rgba(26, 20, 14, 0.8);
-}
-
-.form-group textarea {
-    resize: vertical;
-    min-height: 100px;
-}
-
-.submit-btn {
-    background: transparent;
-    border: 1px solid var(--ocre-dore);
-    color: var(--or-lumiere);
-    font-family: inherit;
-    font-size: 0.85rem;
-    letter-spacing: 0.2em;
-    padding: 0.7rem 2rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    display: block;
-    margin: 0 auto;
-}
-
-.submit-btn:hover {
-    background: var(--ocre-dore);
-    color: var(--noir-profond);
-}
-
-/* Message de confirmation */
-.success-message {
-    text-align: center;
-    color: var(--or-lumiere);
-    font-size: 0.95rem;
-    letter-spacing: 0.1em;
-    display: none;
-}
-
-.success-message.show {
-    display: block;
 }
 
 /* Footer */
