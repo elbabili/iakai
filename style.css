@@ -1,0 +1,281 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --noir-profond: #0a0806;
+    --brun-ombre: #1a140e;
+    --ocre-sombre: #3d2f1e;
+    --ocre-dore: #8b6914;
+    --or-lumiere: #c4a035;
+    --blanc-lumiere: #e8e4dc;
+    --gris-clair: #9a958c;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    min-height: 100vh;
+    background: var(--noir-profond);
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    color: var(--blanc-lumiere);
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* Arc-en-ciel animé diagonal */
+.rainbow-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.rainbow-overlay::before {
+    content: '';
+    position: absolute;
+    top: -100%;
+    left: -100%;
+    width: 300%;
+    height: 300%;
+    background: 
+        radial-gradient(ellipse at 20% 20%, rgba(196, 160, 53, 0.4) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 30%, rgba(139, 105, 20, 0.35) 0%, transparent 45%),
+        radial-gradient(ellipse at 40% 70%, rgba(61, 47, 30, 0.5) 0%, transparent 50%),
+        radial-gradient(ellipse at 70% 80%, rgba(232, 228, 220, 0.25) 0%, transparent 40%),
+        radial-gradient(ellipse at 10% 60%, rgba(154, 149, 140, 0.3) 0%, transparent 45%),
+        radial-gradient(ellipse at 90% 50%, rgba(26, 20, 14, 0.6) 0%, transparent 50%);
+    animation: rainbow-flow 25s ease-in-out infinite;
+}
+
+.rainbow-overlay::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        135deg,
+        transparent 0%,
+        rgba(196, 160, 53, 0.15) 25%,
+        rgba(139, 105, 20, 0.2) 50%,
+        rgba(232, 228, 220, 0.1) 75%,
+        transparent 100%
+    );
+    background-size: 200% 200%;
+    animation: shimmer 15s ease-in-out infinite;
+}
+
+@keyframes rainbow-flow {
+    0% {
+        transform: translate(0%, 0%) rotate(0deg);
+    }
+    33% {
+        transform: translate(-15%, -15%) rotate(2deg);
+    }
+    66% {
+        transform: translate(-30%, -30%) rotate(-1deg);
+    }
+    100% {
+        transform: translate(0%, 0%) rotate(0deg);
+    }
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: 100% 100%;
+    }
+    50% {
+        background-position: 0% 0%;
+    }
+    100% {
+        background-position: 100% 100%;
+    }
+}
+
+/* Conteneur principal */
+.container {
+    position: relative;
+    z-index: 2;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+}
+
+/* Image centrale */
+.artwork {
+    max-width: min(85vw, 600px);
+    max-height: 65vh;
+    object-fit: contain;
+    border-radius: 2px;
+    box-shadow: 
+        0 0 60px rgba(196, 160, 53, 0.15),
+        0 0 120px rgba(139, 105, 20, 0.1);
+    transition: box-shadow 0.8s ease;
+}
+
+.artwork:hover {
+    box-shadow: 
+        0 0 80px rgba(196, 160, 53, 0.2),
+        0 0 160px rgba(139, 105, 20, 0.15);
+}
+
+/* Formulaire de contact */
+.contact-section {
+    margin-top: 4rem;
+    width: 100%;
+    max-width: 400px;
+    opacity: 0.7;
+    transition: opacity 0.5s ease;
+}
+
+.contact-section:hover,
+.contact-section:focus-within {
+    opacity: 1;
+}
+
+.contact-toggle {
+    background: none;
+    border: none;
+    color: var(--gris-clair);
+    font-family: inherit;
+    font-size: 0.9rem;
+    letter-spacing: 0.15em;
+    cursor: pointer;
+    padding: 0.5rem 1rem;
+    transition: color 0.3s ease;
+    display: block;
+    margin: 0 auto;
+}
+
+.contact-toggle:hover {
+    color: var(--or-lumiere);
+}
+
+.contact-form {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.6s ease, opacity 0.4s ease;
+    opacity: 0;
+}
+
+.contact-form.open {
+    max-height: 400px;
+    opacity: 1;
+    margin-top: 1.5rem;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    background: rgba(26, 20, 14, 0.6);
+    border: 1px solid var(--ocre-sombre);
+    color: var(--blanc-lumiere);
+    font-family: inherit;
+    font-size: 0.95rem;
+    padding: 0.8rem 1rem;
+    border-radius: 2px;
+    transition: border-color 0.3s ease, background 0.3s ease;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+    color: var(--gris-clair);
+    opacity: 0.6;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--ocre-dore);
+    background: rgba(26, 20, 14, 0.8);
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.submit-btn {
+    background: transparent;
+    border: 1px solid var(--ocre-dore);
+    color: var(--or-lumiere);
+    font-family: inherit;
+    font-size: 0.85rem;
+    letter-spacing: 0.2em;
+    padding: 0.7rem 2rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: block;
+    margin: 0 auto;
+}
+
+.submit-btn:hover {
+    background: var(--ocre-dore);
+    color: var(--noir-profond);
+}
+
+/* Message de confirmation */
+.success-message {
+    text-align: center;
+    color: var(--or-lumiere);
+    font-size: 0.95rem;
+    letter-spacing: 0.1em;
+    display: none;
+}
+
+.success-message.show {
+    display: block;
+}
+
+/* Footer */
+.footer {
+    margin-top: 3rem;
+    opacity: 0.4;
+    transition: opacity 0.3s ease;
+}
+
+.footer:hover {
+    opacity: 0.8;
+}
+
+.footer a {
+    color: var(--gris-clair);
+    text-decoration: none;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+}
+
+.footer a:hover {
+    color: var(--or-lumiere);
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .container {
+        padding: 1.5rem;
+    }
+
+    .artwork {
+        max-width: 95vw;
+    }
+
+    .contact-section {
+        margin-top: 3rem;
+    }
+}

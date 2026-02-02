@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IAKAI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="rainbow-overlay"></div>
+    
+    <main class="container">
+        <img 
+            src="Les_nouveaux_misérables.jpg" 
+            alt="Les Nouveaux Misérables" 
+            class="artwork"
+        >
+
+        <section class="contact-section">
+            <button class="contact-toggle" id="contactToggle" aria-expanded="false">
+                CONTACT
+            </button>
+            
+            <form 
+                class="contact-form" 
+                id="contactForm"
+                action="https://api.web3forms.com/submit" 
+                method="POST"
+            >
+                <input type="hidden" name="access_key" value="b053f5f6-ab07-4471-8e8e-f742dd806a20">
+                <input type="hidden" name="subject" value="Nouveau message depuis iakai.fr">
+                <input type="hidden" name="redirect" value="https://iakai.fr?success=true">
+                
+                <div class="form-group">
+                    <input 
+                        type="text" 
+                        name="name" 
+                        placeholder="Nom" 
+                        required
+                    >
+                </div>
+                
+                <div class="form-group">
+                    <input 
+                        type="email" 
+                        name="email" 
+                        placeholder="Email" 
+                        required
+                    >
+                </div>
+                
+                <div class="form-group">
+                    <textarea 
+                        name="message" 
+                        placeholder="Message" 
+                        required
+                    ></textarea>
+                </div>
+                
+                <button type="submit" class="submit-btn">ENVOYER</button>
+            </form>
+
+            <p class="success-message" id="successMessage">
+                Merci, votre message a été envoyé.
+            </p>
+        </section>
+
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
