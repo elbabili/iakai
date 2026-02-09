@@ -6,24 +6,31 @@
     <title>IAKAI</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="rainbow-overlay"></div>
-    
+
     <main class="container">
-        <img 
-            src="Les_nouveaux_misérables.jpg" 
-            alt="Les Nouveaux Misérables" 
-            class="artwork"
-        >
+        <header class="site-header">
+            <h1 class="site-title">IAKAI</h1>
+        </header>
+
+        <div class="gallery" id="gallery">
+            <!-- Images injectées dynamiquement par script.js -->
+        </div>
 
         <section class="contact-section">
-            <a href="mailto:contact@iakai.fr" class="contact-link">CONTACT</a>
+            <button class="contact-toggle" id="contactToggle" aria-expanded="false">
+                CONTACT
+            </button>
+            <div class="contact-form" id="contactForm">
+                <a href="mailto:contact@iakai.fr" class="email-link">contact@iakai.fr</a>
+            </div>
         </section>
-
     </main>
 
+    <script src="script.js"></script>
 </body>
 </html>

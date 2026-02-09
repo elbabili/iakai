@@ -1,0 +1,27 @@
+[
+    {
+        "file": "le_denouement.jpg",
+        "alt": "Le Dénouement",
+        "date": "2025-02-01"
+    },
+    {
+        "file": "la_lutte.png",
+        "alt": "La Lutte",
+        "date": "2025-02-02"
+    },
+    {
+        "file": "les_nouveaux_miserables.jpg",
+        "alt": "Les Nouveaux Misérables",
+        "date": "2025-02-03"
+    },
+    {
+        "file": "marie_jesus.jpg",
+        "alt": "Marie Jésus",
+        "date": "2025-02-09"
+    },
+    {
+        "file": "fille_foret.jpg",
+        "alt": "Fille de la Forêt",
+        "date": "2025-02-09"
+    }
+]
