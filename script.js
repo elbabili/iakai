@@ -18,6 +18,12 @@
    2. (optionnel) Supprime le fichier du dossier /images/
    3. Actualise la page → la grille se réajuste
    
+   Images larges (pleine ligne) :
+   ─────────────────────────────
+   Si le nom du fichier commence par "wide_",
+   l'image occupera toute la largeur de la grille
+   (les 3 colonnes). Ex: wide_panorama.jpg
+   
    ═══════════════════════════════════════════ */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -44,17 +50,22 @@ async function initGallery() {
         // Tri par date décroissante (les plus récentes en premier)
         images.sort((a, b) => new Date(b.date) - new Date(a.date));
 
-        // Adapter le nombre de colonnes au nombre d'images
-        const count = images.length;
+        // Adapter le nombre de colonnes au nombre d'images (hors wide)
+        const normalCount = images.filter(img => !img.file.startsWith('wide_')).length;
         gallery.classList.remove('cols-1', 'cols-2');
-        if (count === 1) gallery.classList.add('cols-1');
-        else if (count === 2) gallery.classList.add('cols-2');
+        if (normalCount === 1) gallery.classList.add('cols-1');
+        else if (normalCount === 2) gallery.classList.add('cols-2');
 
         // Générer les cartes
         images.forEach((img, index) => {
             const card = document.createElement('figure');
             card.className = 'artwork-card';
             card.style.animationDelay = `${0.15 * index}s`;
+
+            // Détection image large via le préfixe wide_
+            if (img.file.startsWith('wide_')) {
+                card.classList.add('wide');
+            }
 
             const image = document.createElement('img');
             image.src = `images/${img.file}`;

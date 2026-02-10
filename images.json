@@ -1,27 +1,45 @@
 [
     {
-        "file": "le_denouement.jpg",
-        "alt": "Le Dénouement",
-        "date": "2025-02-01"
-    },
-    {
-        "file": "la_lutte.png",
-        "alt": "La Lutte",
-        "date": "2025-02-02"
-    },
-    {
-        "file": "les_nouveaux_miserables.jpg",
-        "alt": "Les Nouveaux Misérables",
-        "date": "2025-02-03"
-    },
-    {
         "file": "marie_jesus.jpg",
         "alt": "Marie Jésus",
-        "date": "2025-02-09"
+        "date": "2026-02-11"
     },
     {
         "file": "fille_foret.jpg",
         "alt": "Fille de la Forêt",
-        "date": "2025-02-09"
+        "date": "2026-02-10"
+    },
+    {
+        "file": "chat_fourmi_abeille_nebuleuse.jpg",
+        "alt": "Chat, Fourmi, Abeille et Nebuleuse",
+        "date": "2026-02-09"
+    },
+
+    {
+        "file": "wide_alhambra.jpg",
+        "alt": "al hambra",
+        "date": "2026-02-07"
+    },
+
+    {
+        "file": "les_nouveaux_miserables.jpg",
+        "alt": "Les Nouveaux Misérables",
+        "date": "2026-02-05"
+    },
+    {
+        "file": "la_lutte.png",
+        "alt": "La Lutte",
+        "date": "2026-02-04"
+    },
+    {
+        "file": "le_denouement.jpg",
+        "alt": "Le Dénouement",
+        "date": "2026-02-03"
+    },
+   
+    {
+        "file": "wide_chateau_coeur.jpg",
+        "alt": "Château du Cœur",
+        "date": "2026-02-02"
     }
 ]
