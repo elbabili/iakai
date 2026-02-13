@@ -3,30 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IAKAI</title>
+    <title>IAKAI — L'art de raconter autrement</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body data-page="home">
     <div class="rainbow-overlay"></div>
 
-    <main class="container">
+    <nav class="nav-hamburger">
+        <button class="hamburger-btn" id="hamburgerBtn" aria-label="Menu" aria-expanded="false">
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+        </button>
+        <div class="nav-menu" id="navMenu">
+            <a href="comics.html" class="nav-link">BD</a>
+            <a href="dessins.html" class="nav-link">Dessins</a>
+            <a href="videos.html" class="nav-link">Vidéos</a>
+            <a href="apps.html" class="nav-link">Apps & Jeux</a>
+            <div class="nav-divider"></div>
+            <a href="mailto:contact@iakai.fr" class="nav-link nav-contact">Contact</a>
+        </div>
+    </nav>
+
+    <main class="container home-container">
         <header class="site-header">
-            <h1 class="site-title">IAKAI</h1>
+            <a href="index.html" class="site-title-link">
+                <h1 class="site-title">IAKAI</h1>
+            </a>
+            <p class="site-tagline">L'art de raconter autrement</p>
         </header>
 
-        <div class="gallery" id="gallery">
-            <!-- Images injectées dynamiquement par script.js -->
-        </div>
+        <section class="home-content">
+            <div class="home-text">
+                <p class="home-intro">
+                    Plutôt que se priver de l'IA, exploitons tout son potentiel pour créer, 
+                    imaginer et transmettre.
+                </p>
+                <p class="home-description">
+                    IAKAI utilise l'intelligence artificielle pour améliorer des peintures, 
+                    en créer de nouvelles, et produire des bandes dessinées silencieuses 
+                    aux bulles vides — à compléter en famille, au crayon. 
+                    Reprendre le contrôle des écrans intelligemment, 
+                    c'est possible : en les utilisant pour renouer avec l'imaginaire, 
+                    la lecture et la création.
+                </p>
+                <p class="home-invitation">
+                    Ici, chaque histoire commence — à vous de la raconter.
+                </p>
+            </div>
 
-        <section class="contact-section">
-            <button class="contact-toggle" id="contactToggle" aria-expanded="false">
-                CONTACT
-            </button>
-            <div class="contact-form" id="contactForm">
-                <a href="mailto:contact@iakai.fr" class="email-link">contact@iakai.fr</a>
+            <div class="home-navigation">
+                <a href="comics.html" class="home-card">
+                    <span class="home-card-title">BD</span>
+                    <span class="home-card-desc">Des histoires muettes à compléter au crayon</span>
+                </a>
+                <a href="dessins.html" class="home-card">
+                    <span class="home-card-title">Dessins</span>
+                    <span class="home-card-desc">Peintures et créations visuelles</span>
+                </a>
+                <a href="videos.html" class="home-card">
+                    <span class="home-card-title">Vidéos</span>
+                    <span class="home-card-desc">L'art en mouvement</span>
+                </a>
+                <a href="apps.html" class="home-card">
+                    <span class="home-card-title">Apps & Jeux</span>
+                    <span class="home-card-desc">Apprendre en s'amusant</span>
+                </a>
             </div>
         </section>
     </main>

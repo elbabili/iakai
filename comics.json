@@ -1,0 +1,30 @@
+[
+    {
+        "file": "ep01_fiha_khayr.jpg",
+        "title_ar": "فيها خير",
+        "title_tr": "Fīhā Khayr",
+        "title_en": "There Is Always A Good",
+        "date": "2026-02-11"
+    },
+    {
+        "file": "ep02_al_qanaa.jpg",
+        "title_ar": "القناعة",
+        "title_tr": "Al Qanā'a",
+        "title_en": "Be Content With What You Have",
+        "date": "2026-02-12"
+    },
+    {
+        "file": "ep03_as_sabr_wa_ath_thiqa.jpg",
+        "title_ar": "الصبر والثقة",
+        "title_tr": "As-Sabr wa Ath-Thiqa",
+        "title_en": "Patience & Self-Trust",
+        "date": "2026-02-13"
+    },
+    {
+        "file": "ep04_ad_dua.jpg",
+        "title_ar": "الدعاء",
+        "title_tr": "Ad-Du'ā'",
+        "title_en": "The Power of Prayer",
+        "date": "2026-02-14"
+    }
+]
