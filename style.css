@@ -202,7 +202,7 @@ body {
 
 .site-title {
     font-family: 'Cormorant Garamond', Georgia, serif;
-    font-size: 3.5rem;
+    font-size: 3rem;
     font-weight: 300;
     letter-spacing: 0.5em;
     color: var(--blanc-lumiere);
@@ -216,7 +216,7 @@ body {
 }
 
 .site-tagline {
-    font-size: 1.25rem;
+    font-size: 0.95rem;
     letter-spacing: 0.25em;
     color: var(--ocre-dore);
     font-style: italic;
@@ -253,7 +253,7 @@ body {
 }
 
 .home-intro {
-    font-size: 1.6rem;
+    font-size: 1.3rem;
     line-height: 1.8;
     color: var(--blanc-lumiere);
     margin-bottom: 1.5rem;
@@ -261,14 +261,14 @@ body {
 }
 
 .home-description {
-    font-size: 1.35rem;
+    font-size: 1.05rem;
     line-height: 1.8;
     color: var(--gris-clair);
     margin-bottom: 1.5rem;
 }
 
 .home-invitation {
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     color: var(--or-lumiere);
     font-style: italic;
     font-weight: 300;
@@ -304,7 +304,7 @@ body {
 }
 
 .home-card-title {
-    font-size: 1.35rem;
+    font-size: 1.05rem;
     letter-spacing: 0.15em;
     color: var(--blanc-lumiere);
     text-transform: uppercase;
@@ -318,7 +318,7 @@ body {
 }
 
 .home-card-desc {
-    font-size: 1.1rem;
+    font-size: 0.85rem;
     color: var(--gris-clair);
     line-height: 1.4;
     text-align: center;
@@ -613,6 +613,75 @@ body {
     animation: pulse-line 3s ease-in-out infinite;
 }
 
+/* ═══ Apps & Jeux ═══ */
+
+.apps-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1.5rem;
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.app-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1.8rem 1.2rem;
+    background: rgba(58, 51, 42, 0.4);
+    border: 1px solid rgba(224, 200, 90, 0.1);
+    border-radius: 10px;
+    text-decoration: none;
+    transition: all 0.4s ease;
+    opacity: 0;
+    animation: fadeInUp 0.6s ease forwards;
+}
+
+.app-card:hover {
+    border-color: var(--or-lumiere);
+    background: rgba(58, 51, 42, 0.7);
+    box-shadow: 0 0 30px rgba(224, 200, 90, 0.1);
+    transform: translateY(-4px);
+}
+
+.app-icon {
+    margin-bottom: 1rem;
+    transition: transform 0.3s ease;
+}
+
+.app-card:hover .app-icon {
+    transform: scale(1.1);
+}
+
+.app-title {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 1.3rem;
+    font-weight: 300;
+    letter-spacing: 0.15em;
+    color: var(--blanc-lumiere);
+    margin-bottom: 0.5rem;
+}
+
+.app-card:hover .app-title {
+    color: var(--or-lumiere);
+}
+
+.app-desc {
+    font-size: 0.75rem;
+    color: var(--gris-clair);
+    text-align: center;
+    line-height: 1.5;
+    margin-bottom: 0.8rem;
+}
+
+.app-badge {
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    color: var(--ocre-dore);
+    text-align: center;
+    line-height: 1.4;
+}
+
 @keyframes pulse-line {
     0%, 100% { opacity: 0.3; width: 60px; }
     50%      { opacity: 1; width: 100px; }
@@ -640,7 +709,7 @@ body {
 
 @media (max-width: 600px) {
     .container { padding: 2rem 1rem; }
-    .site-title { font-size: 2.5rem; letter-spacing: 0.3em; }
+    .site-title { font-size: 2rem; letter-spacing: 0.3em; }
     .gallery { grid-template-columns: 1fr; gap: 1.2rem; }
     .gallery.cols-1, .gallery.cols-2 { max-width: 100%; }
     .video-gallery { grid-template-columns: 1fr; }
@@ -650,5 +719,5 @@ body {
     .nav-hamburger { top: 1rem; right: 1rem; }
     .home-navigation { max-width: 100%; gap: 0.5rem; }
     .home-card { padding: 0.6rem 0.8rem; }
-    .home-intro { font-size: 1.35rem; }
+    .home-intro { font-size: 1.1rem; }
 }

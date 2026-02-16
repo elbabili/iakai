@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Brain Pong — IAKAI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Noto+Sans+Arabic:wght@400;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{--fond:#1a1612;--or:#e0c85a;--or-dim:#a08830;--vert:#5ac878;--rouge:#d94f4f;--blanc:#f5f1e8;--gris:#8a8278}
+        body{background:var(--fond);color:var(--blanc);font-family:'Space Mono',monospace;overflow:hidden;height:100vh;width:100vw;touch-action:none;-webkit-user-select:none;user-select:none}
+
+        #startScreen{position:fixed;inset:0;z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--fond);transition:opacity .6s}
+        #startScreen.hidden{opacity:0;pointer-events:none}
+        .start-logo{font-family:'Cormorant Garamond',serif;font-size:3.5rem;font-weight:300;letter-spacing:.3em;color:var(--or);text-transform:uppercase;margin-bottom:.3rem}
+        .start-subtitle{font-family:'Cormorant Garamond',serif;font-size:1rem;color:var(--gris);letter-spacing:.2em;margin-bottom:3rem;font-style:italic}
+        .start-tagline{font-size:.75rem;color:var(--gris);letter-spacing:.15em;margin-bottom:2rem;text-align:center;line-height:1.8;max-width:340px}
+        .start-tagline .ar{font-family:'Noto Sans Arabic',sans-serif;font-size:.85rem;color:var(--or-dim);direction:rtl}
+        .start-btn{padding:.8rem 2.5rem;background:0 0;border:1px solid var(--or);color:var(--or);font-family:'Space Mono',monospace;font-size:.85rem;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;transition:all .3s;border-radius:4px}
+        .start-btn:hover{background:var(--or);color:var(--fond)}
+        .start-controls{margin-top:2rem;font-size:.65rem;color:var(--gris);text-align:center;line-height:2;letter-spacing:.1em}
+
+        #hud{position:fixed;top:0;left:0;right:0;z-index:10;display:flex;justify-content:space-between;align-items:center;padding:.6rem 1.5rem;pointer-events:none}
+        .score{font-size:1.8rem;font-weight:700;letter-spacing:.05em}
+        .score-player{color:var(--or)}.score-cpu{color:var(--gris)}
+        .hud-center{display:flex;flex-direction:column;align-items:center}
+        .streak{font-size:.6rem;color:var(--or-dim);letter-spacing:.2em;text-transform:uppercase}
+        .streak-count{color:var(--or);font-weight:700}
+
+        #gameCanvas{display:block;width:100vw;height:100vh}
+
+        #questionBar{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0.95);z-index:50;background:rgba(26,22,18,.82);backdrop-filter:blur(6px);border:1px solid rgba(224,200,90,.15);border-radius:8px;padding:.7rem 1rem;width:90%;max-width:380px;opacity:0;visibility:hidden;transition:all .4s}
+        #questionBar.visible{opacity:1;visibility:visible;transform:translate(-50%,-50%) scale(1)}
+        .qbar-top{display:flex;align-items:center;gap:.8rem;margin-bottom:.6rem;flex-wrap:wrap}
+        .qbar-cat{font-size:.5rem;letter-spacing:.25em;color:var(--or-dim);text-transform:uppercase;white-space:nowrap}
+        .qbar-text{font-family:'Cormorant Garamond',serif;font-size:.95rem;color:var(--blanc);font-weight:300;flex:1;min-width:150px}
+        .qbar-text-ar{font-family:'Noto Sans Arabic',sans-serif;font-size:.75rem;color:var(--or-dim);direction:rtl}
+        .qbar-answers{display:flex;gap:.4rem;flex-wrap:wrap}
+        .qbar-btn{flex:1;min-width:calc(50% - .4rem);padding:.5rem .7rem;background:rgba(58,51,42,.6);border:1px solid rgba(224,200,90,.12);border-radius:5px;color:var(--blanc);font-family:'Space Mono',monospace;font-size:.65rem;cursor:pointer;transition:all .25s;text-align:center}
+        .qbar-btn:hover{border-color:var(--or);background:rgba(224,200,90,.1)}
+        .qbar-btn.correct{border-color:var(--vert);background:rgba(90,200,120,.25);color:var(--vert)}
+        .qbar-btn.wrong{border-color:var(--rouge);background:rgba(217,79,79,.25);color:var(--rouge)}
+        .qbar-timer{margin-top:.5rem;width:100%;height:2px;background:rgba(255,255,255,.08);border-radius:1px;overflow:hidden}
+        .qbar-timer-bar{height:100%;background:var(--or);border-radius:1px;transition:width .1s linear}
+
+        .feedback-flash{position:fixed;top:40%;left:50%;transform:translate(-50%,-50%);font-family:'Noto Sans Arabic',sans-serif;font-size:2.5rem;font-weight:600;z-index:60;pointer-events:none;opacity:0;transition:all .5s}
+        .feedback-flash.show{opacity:1;transform:translate(-50%,-60%)}
+        .feedback-flash.correct{color:var(--vert)}.feedback-flash.wrong{color:var(--rouge)}
+
+        #gameOver{position:fixed;inset:0;z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(26,22,18,.95);opacity:0;visibility:hidden;transition:all .5s}
+        #gameOver.visible{opacity:1;visibility:visible}
+        .gameover-title{font-family:'Cormorant Garamond',serif;font-size:2.5rem;font-weight:300;color:var(--or);letter-spacing:.2em;margin-bottom:1.5rem}
+        .gameover-stats{font-size:.75rem;color:var(--gris);letter-spacing:.15em;line-height:2.2;text-align:center;margin-bottom:2rem}
+        .gameover-stats span{color:var(--or);font-weight:700}
+        .back-link{margin-top:1.5rem;font-size:.65rem;color:var(--gris);text-decoration:none;letter-spacing:.15em;transition:color .3s}
+        .back-link:hover{color:var(--or)}
+
+        @media(max-width:600px){.start-logo{font-size:2.5rem}.score{font-size:1.4rem}.qbar-text{font-size:.9rem}.qbar-btn{font-size:.65rem;padding:.5rem .6rem}}
+    </style>
+</head>
+<body>
+
+<div id="startScreen">
+    <div class="start-logo">Brain Pong</div>
+    <div class="start-subtitle">par IAKAI</div>
+    <div class="start-tagline">
+        Joue au Pong ET réponds aux questions<br>en même temps ! Double défi 🧠🏓
+        <br><br>
+        <span class="ar">إلعب وأجب في نفس الوقت — تحدٍّ مزدوج</span>
+    </div>
+    <button class="start-btn" id="btnStart">JOUER</button>
+    <div class="start-controls">Clavier : ↑ ↓ + clic réponse<br>Mobile : glisse + touche la réponse</div>
+</div>
+
+<div id="hud">
+    <div class="score score-player" id="scorePlayer">0</div>
+    <div class="hud-center"><div class="streak">Série : <span class="streak-count" id="streakCount">0</span></div></div>
+    <div class="score score-cpu" id="scoreCpu">0</div>
+</div>
+
+<canvas id="gameCanvas"></canvas>
+
+<div id="questionBar">
+    <div class="qbar-top">
+        <span class="qbar-cat" id="qCat"></span>
+        <span class="qbar-text" id="qText"></span>
+        <span class="qbar-text-ar" id="qTextAr"></span>
+    </div>
+    <div class="qbar-answers" id="qAnswers"></div>
+    <div class="qbar-timer"><div class="qbar-timer-bar" id="qTimerBar"></div></div>
+</div>
+
+<div class="feedback-flash" id="feedbackFlash"></div>
+
+<div id="gameOver">
+    <div class="gameover-title" id="goTitle"></div>
+    <div class="gameover-stats" id="goStats"></div>
+    <button class="start-btn" id="btnReplay">REJOUER</button>
+    <a href="apps.html" class="back-link">← Retour à IAKAI</a>
+</div>
+
+<script>
+const QUESTIONS=[
+// ISLAM (12)
+{cat:"Islam",q:"Combien y a-t-il de piliers en Islam ?",ar:"كم عدد أركان الإسلام؟",c:["3","5","7","4"],a:1},
+{cat:"Islam",q:"Quel est le premier pilier de l'Islam ?",ar:"ما هو الركن الأول في الإسلام؟",c:["La prière","La chahada","Le jeûne","Le pèlerinage"],a:1},
+{cat:"Islam",q:"Combien de prières obligatoires par jour ?",ar:"كم عدد الصلوات المفروضة في اليوم؟",c:["3","4","5","7"],a:2},
+{cat:"Islam",q:"Pendant quel mois les musulmans jeûnent-ils ?",ar:"في أي شهر يصوم المسلمون؟",c:["Chaabane","Ramadan","Mouharram","Rajab"],a:1},
+{cat:"Islam",q:"Quelle ville abrite la Kaaba ?",ar:"في أي مدينة توجد الكعبة؟",c:["Médine","Jérusalem","La Mecque","Damas"],a:2},
+{cat:"Islam",q:"Quel est le dernier prophète en Islam ?",ar:"من هو آخر الأنبياء في الإسلام؟",c:["Issa","Moussa","Ibrahim","Mohammed ﷺ"],a:3},
+{cat:"Islam",q:"Combien de jours dure le Ramadan ?",ar:"كم يوماً يستمر رمضان؟",c:["28 jours","29 ou 30 jours","31 jours","25 jours"],a:1},
+{cat:"Islam",q:"Quelle prière se fait à l'aube ?",ar:"أي صلاة تُؤدّى عند الفجر؟",c:["Dhuhr","Maghrib","Fajr","Isha"],a:2},
+{cat:"Islam",q:"Quel jour est particulièrement béni ?",ar:"أي يوم له بركة خاصة؟",c:["Lundi","Mercredi","Vendredi","Dimanche"],a:2},
+{cat:"Islam",q:"Le Hajj est le pèlerinage vers… ?",ar:"الحج هو الذهاب إلى…؟",c:["Médine","La Mecque","Jérusalem","Le Caire"],a:1},
+{cat:"Islam",q:"Quel prophète a construit la Kaaba ?",ar:"أي نبي بنى الكعبة؟",c:["Moussa","Mohammed ﷺ","Ibrahim","Nouh"],a:2},
+{cat:"Islam",q:"Qu'est-ce que la Zakat ?",ar:"ما هي الزكاة؟",c:["Une prière","L'aumône obligatoire","Un jeûne","Un pèlerinage"],a:1},
+
+// CORAN (12)
+{cat:"Coran",q:"Quelle est la première sourate du Coran ?",ar:"ما هي أول سورة في القرآن؟",c:["Al-Baqara","Al-Fatiha","Al-Ikhlas","Al-Nas"],a:1},
+{cat:"Coran",q:"Combien de sourates contient le Coran ?",ar:"كم عدد سور القرآن؟",c:["100","114","120","99"],a:1},
+{cat:"Coran",q:"Quelle sourate est le cœur du Coran ?",ar:"ما السورة التي تُسمّى قلب القرآن؟",c:["Al-Baqara","Yasin","Al-Kahf","Ar-Rahman"],a:1},
+{cat:"Coran",q:"Quel mot signifie 'Au nom de Dieu' ?",ar:"ما الكلمة التي تعني بسم الله؟",c:["Alhamdulillah","Bismillah","SubhanAllah","Allahu Akbar"],a:1},
+{cat:"Coran",q:"Quelle est la plus longue sourate ?",ar:"ما أطول سورة في القرآن؟",c:["Al-Imran","An-Nisa","Al-Baqara","Al-Maida"],a:2},
+{cat:"Coran",q:"Quelle est la plus courte sourate ?",ar:"ما أقصر سورة في القرآن؟",c:["Al-Ikhlas","Al-Kawthar","Al-Asr","Al-Fil"],a:1},
+{cat:"Coran",q:"Dans quelle grotte le Coran a commencé à être révélé ?",ar:"في أي غار بدأ نزول القرآن؟",c:["Thawr","Hira","Kahf","Uhud"],a:1},
+{cat:"Coran",q:"Quel est le premier mot révélé ?",ar:"ما أول كلمة نزلت من القرآن؟",c:["Bismillah","Iqra (Lis)","Alhamdulillah","Qul"],a:1},
+{cat:"Coran",q:"Le Coran a été révélé en combien d'années ?",ar:"كم سنة استغرق نزول القرآن؟",c:["10 ans","15 ans","23 ans","30 ans"],a:2},
+{cat:"Coran",q:"Par quel ange le Coran a-t-il été transmis ?",ar:"بواسطة أي ملاك نزل القرآن؟",c:["Mikail","Israfil","Jibrail","Azrail"],a:2},
+{cat:"Coran",q:"Quelle sourate mentionne le voyage nocturne ?",ar:"أي سورة تذكر الإسراء؟",c:["Al-Kahf","Al-Isra","Al-Anfal","Maryam"],a:1},
+{cat:"Coran",q:"Sourate Al-Ikhlas parle de… ?",ar:"عن ماذا تتحدث سورة الإخلاص؟",c:["Les prophètes","L'unicité de Dieu","Le paradis","Le jugement"],a:1},
+
+// SIRA (16)
+{cat:"Sira",q:"En quelle année est né le Prophète ﷺ ?",ar:"في أي عام وُلد النبي ﷺ؟",c:["550","570","590","610"],a:1},
+{cat:"Sira",q:"Comment s'appelait la mère du Prophète ﷺ ?",ar:"ما اسم أم النبي ﷺ؟",c:["Khadija","Fatima","Amina","Aïcha"],a:2},
+{cat:"Sira",q:"Qui a élevé le Prophète ﷺ après ses parents ?",ar:"من ربّى النبي ﷺ بعد والديه؟",c:["Abu Bakr","Abu Talib","Omar","Ali"],a:1},
+{cat:"Sira",q:"Qui était la première épouse du Prophète ﷺ ?",ar:"من أول زوجة للنبي ﷺ؟",c:["Aïcha","Hafsa","Khadija","Oum Salama"],a:2},
+{cat:"Sira",q:"Premier homme à embrasser l'Islam ?",ar:"أول رجل أسلم؟",c:["Omar","Abu Bakr","Ali","Othman"],a:1},
+{cat:"Sira",q:"Premier enfant à embrasser l'Islam ?",ar:"أول طفل أسلم؟",c:["Omar","Abu Bakr","Ali","Zayd"],a:2},
+{cat:"Sira",q:"L'émigration vers Médine s'appelle… ?",ar:"ما اسم الهجرة إلى المدينة؟",c:["Le Hajj","La Hijra","La Omra","Le Jihad"],a:1},
+{cat:"Sira",q:"En quelle année la Hijra ?",ar:"في أي سنة كانت الهجرة؟",c:["610","620","622","630"],a:2},
+{cat:"Sira",q:"Première bataille de l'Islam ?",ar:"أول معركة في الإسلام؟",c:["Uhud","Khandaq","Badr","Khaybar"],a:2},
+{cat:"Sira",q:"Métier du Prophète ﷺ avant la révélation ?",ar:"مهنة النبي ﷺ قبل الوحي؟",c:["Forgeron","Berger et commerçant","Médecin","Enseignant"],a:1},
+{cat:"Sira",q:"Compagnon dans la grotte de Thawr ?",ar:"رفيق النبي ﷺ في غار ثور؟",c:["Omar","Ali","Abu Bakr","Othman"],a:2},
+{cat:"Sira",q:"Surnom du Prophète ﷺ avant l'Islam ?",ar:"لقب النبي ﷺ قبل الإسلام؟",c:["Le Brave","Le Savant","Al-Amine","Le Sage"],a:2},
+{cat:"Sira",q:"Année de la conquête de La Mecque ?",ar:"سنة فتح مكة؟",c:["625","628","630","632"],a:2},
+{cat:"Sira",q:"Premier muezzin de l'Islam ?",ar:"أول مؤذن في الإسلام؟",c:["Abu Bakr","Bilal","Omar","Ali"],a:1},
+{cat:"Sira",q:"Où est enterré le Prophète ﷺ ?",ar:"أين دُفن النبي ﷺ؟",c:["La Mecque","Jérusalem","Médine","Taif"],a:2},
+{cat:"Sira",q:"Quel pacte signé avec les Mecquois ?",ar:"ما العهد مع أهل مكة؟",c:["Pacte de Médine","Traité de Hudaybiya","Pacte de Aqaba","Traité de Taif"],a:1},
+
+// VALEURS (20)
+{cat:"Valeurs",q:"Que signifie 'As-Sabr' ?",ar:"ماذا يعني الصبر؟",c:["La gratitude","La patience","La générosité","Le courage"],a:1},
+{cat:"Valeurs",q:"Que signifie 'Ash-Shukr' ?",ar:"ماذا يعني الشكر؟",c:["Le pardon","La patience","La gratitude","La sagesse"],a:2},
+{cat:"Valeurs",q:"Que signifie 'Ar-Rahma' ?",ar:"ماذا تعني الرحمة؟",c:["La justice","La compassion","La force","La sincérité"],a:1},
+{cat:"Valeurs",q:"Que signifie 'Al-Amana' ?",ar:"ماذا تعني الأمانة؟",c:["L'honnêteté","La paix","La prière","La loyauté"],a:0},
+{cat:"Valeurs",q:"Le sourire est considéré comme… ?",ar:"الابتسامة تُعتبر…؟",c:["Une obligation","Une sadaqa","Un péché","Une sunna uniquement"],a:1},
+{cat:"Valeurs",q:"Que signifie 'At-Tawadu' ?",ar:"ماذا يعني التواضع؟",c:["L'orgueil","L'humilité","Le repentir","La piété"],a:1},
+{cat:"Valeurs",q:"Que signifie 'Al-Qanaa' ?",ar:"ماذا تعني القناعة؟",c:["L'ambition","Le contentement","La richesse","La tristesse"],a:1},
+{cat:"Valeurs",q:"Le voisin a un droit, lequel ?",ar:"للجار حقّ، ما هو؟",c:["L'ignorer","Le respecter","L'éviter","Le surveiller"],a:1},
+{cat:"Valeurs",q:"Que signifie 'Tawakkul' ?",ar:"ماذا يعني التوكل؟",c:["La peur","S'en remettre à Dieu","La paresse","La prudence"],a:1},
+{cat:"Valeurs",q:"Le meilleur jihad selon le Prophète ﷺ ?",ar:"أفضل الجهاد عند النبي ﷺ؟",c:["Le combat","Contre soi-même","Le voyage","Le silence"],a:1},
+{cat:"Valeurs",q:"Que dit-on avant de manger ?",ar:"ماذا نقول قبل الأكل؟",c:["Alhamdulillah","Bismillah","Astaghfirullah","SubhanAllah"],a:1},
+{cat:"Valeurs",q:"Que dit-on après avoir mangé ?",ar:"ماذا نقول بعد الأكل؟",c:["Bismillah","Allahu Akbar","Alhamdulillah","InchAllah"],a:2},
+{cat:"Valeurs",q:"Comment traiter ses parents ?",ar:"كيف نعامل الوالدين؟",c:["Avec indifférence","Avec respect et bonté","Avec distance","Avec autorité"],a:1},
+{cat:"Valeurs",q:"L'eau : quel geste recommandé ?",ar:"الماء: ما الفعل المستحب؟",c:["La gaspiller","Ne pas partager","Économiser l'eau","La vendre cher"],a:2},
+{cat:"Valeurs",q:"Que signifie 'Al-Ihsan' ?",ar:"ماذا يعني الإحسان؟",c:["La prière","L'excellence","Le jeûne","La charité"],a:1},
+{cat:"Valeurs",q:"Chercher le savoir est… ?",ar:"طلب العلم…؟",c:["Interdit","Optionnel","Une obligation","Réservé aux savants"],a:2},
+{cat:"Valeurs",q:"Que signifie 'Al-Adl' ?",ar:"ماذا يعني العدل؟",c:["La force","La justice","La richesse","La beauté"],a:1},
+{cat:"Valeurs",q:"Que signifie 'As-Sidq' ?",ar:"ماذا يعني الصدق؟",c:["La véracité","La ruse","Le silence","La fierté"],a:0},
+{cat:"Valeurs",q:"Que signifie 'Al-Hilm' ?",ar:"ماذا يعني الحلم؟",c:["La colère","La douceur / clémence","L'oubli","La fatigue"],a:1},
+{cat:"Valeurs",q:"Que signifie 'At-Tawba' ?",ar:"ماذا تعني التوبة؟",c:["Le voyage","La prière","Le repentir","La fête"],a:2},
+];
+
+const canvas=document.getElementById('gameCanvas'),ctx=canvas.getContext('2d');
+let W,H,gameRunning=false,playerScore=0,cpuScore=0,streak=0,bestStreak=0,questionsAnswered=0,questionsCorrect=0,questionQueue=[],ballsSinceQuestion=0,questionActive=false;
+const WINNING_SCORE=11,QUESTION_INTERVAL=4;
+const paddle={w:12,h:80},player={x:0,y:0},cpu={x:0,y:0,speed:4.2},ball={x:0,y:0,r:8,vx:5,vy:3,baseSpeed:5};
+let particles=[];
+
+function resize(){W=canvas.width=innerWidth;H=canvas.height=innerHeight;player.x=20;player.y=H/2-paddle.h/2;cpu.x=W-20-paddle.w;cpu.y=H/2-paddle.h/2}
+addEventListener('resize',resize);resize();
+
+function resetBall(d){ball.x=W/2;ball.y=H/2;const a=(Math.random()*.8-.4);ball.vx=ball.baseSpeed*(d||(Math.random()>.5?1:-1));ball.vy=ball.baseSpeed*a}
+function spawnP(x,y,col,n){for(let i=0;i<n;i++)particles.push({x,y,vx:(Math.random()-.5)*6,vy:(Math.random()-.5)*6,life:1,color:col,size:Math.random()*3+1})}
+function updateP(){particles=particles.filter(p=>{p.x+=p.vx;p.y+=p.vy;p.life-=.03;return p.life>0})}
+function drawP(){particles.forEach(p=>{ctx.globalAlpha=p.life;ctx.fillStyle=p.color;ctx.fillRect(p.x-p.size/2,p.y-p.size/2,p.size,p.size)});ctx.globalAlpha=1}
+
+let playerTarget=0,keysDown={};
+document.addEventListener('keydown',e=>{keysDown[e.key]=true});
+document.addEventListener('keyup',e=>{keysDown[e.key]=false});
+canvas.addEventListener('touchmove',e=>{e.preventDefault();playerTarget=e.touches[0].clientY-paddle.h/2},{passive:false});
+canvas.addEventListener('mousemove',e=>{playerTarget=e.clientY-paddle.h/2});
+
+function updateCPU(){const c=cpu.y+paddle.h/2,d=ball.y-c,r=cpu.speed+(playerScore>5?1:0);if(Math.abs(d)>15)cpu.y+=Math.sign(d)*Math.min(r,Math.abs(d));cpu.y=Math.max(0,Math.min(H-paddle.h,cpu.y))}
+
+function shuffleQ(){questionQueue=[...QUESTIONS].sort(()=>Math.random()-.5)}
+let qTimer=null,qTimeLeft=0;const Q_TIME=12000;
+
+function showQuestion(){
+    if(!questionQueue.length)shuffleQ();
+    const q=questionQueue.pop();questionActive=true;
+    const bar=document.getElementById('questionBar');
+    document.getElementById('qCat').textContent=q.cat;
+    document.getElementById('qText').textContent=q.q;
+    document.getElementById('qTextAr').textContent=q.ar;
+    const ad=document.getElementById('qAnswers');ad.innerHTML='';
+    const idx=q.c.map((_,i)=>i).sort(()=>Math.random()-.5);
+    idx.forEach(i=>{const b=document.createElement('button');b.className='qbar-btn';b.textContent=q.c[i];b.addEventListener('click',e=>{e.stopPropagation();handleA(i===q.a,b,ad,q.a,idx)});ad.appendChild(b)});
+    bar.classList.add('visible');
+    qTimeLeft=Q_TIME;const tb=document.getElementById('qTimerBar');tb.style.width='100%';
+    clearInterval(qTimer);
+    qTimer=setInterval(()=>{qTimeLeft-=100;tb.style.width=(qTimeLeft/Q_TIME*100)+'%';if(qTimeLeft<=0){clearInterval(qTimer);handleA(false,null,ad,q.a,idx)}},100);
+}
+
+function handleA(ok,btn,ad,ci,idx){
+    clearInterval(qTimer);questionsAnswered++;
+    const bs=ad.querySelectorAll('.qbar-btn');
+    bs.forEach((b,j)=>{b.style.pointerEvents='none';if(idx[j]===ci)b.classList.add('correct');else if(b===btn&&!ok)b.classList.add('wrong')});
+    if(ok){questionsCorrect++;streak++;if(streak>bestStreak)bestStreak=streak;playerScore++;showFB('✓ صحيح',true);spawnP(W/2,H/2,'#5ac878',30)}
+    else{streak=0;cpuScore++;showFB('✗ خطأ',false)}
+    updateHUD();
+    setTimeout(()=>{document.getElementById('questionBar').classList.remove('visible');questionActive=false;ballsSinceQuestion=0;checkGO()},1500);
+}
+
+function showFB(t,ok){const e=document.getElementById('feedbackFlash');e.textContent=t;e.className='feedback-flash show '+(ok?'correct':'wrong');setTimeout(()=>e.className='feedback-flash',1200)}
+function updateHUD(){document.getElementById('scorePlayer').textContent=playerScore;document.getElementById('scoreCpu').textContent=cpuScore;document.getElementById('streakCount').textContent=streak}
+
+function checkGO(){
+    if(playerScore>=WINNING_SCORE||cpuScore>=WINNING_SCORE){
+        gameRunning=false;questionActive=false;clearInterval(qTimer);
+        document.getElementById('questionBar').classList.remove('visible');
+        const w=playerScore>=WINNING_SCORE;
+        document.getElementById('goTitle').textContent=w?'VICTOIRE !':'DÉFAITE';
+        document.getElementById('goTitle').style.color=w?'var(--vert)':'var(--rouge)';
+        document.getElementById('goStats').innerHTML=`Score : <span>${playerScore}</span> — <span>${cpuScore}</span><br>Bonnes réponses : <span>${questionsCorrect}</span> / <span>${questionsAnswered}</span><br>Meilleure série : <span>${bestStreak}</span>`;
+        document.getElementById('gameOver').classList.add('visible');
+    }
+}
+
+function update(){
+    if(!gameRunning)return;
+    if(keysDown['ArrowUp'])playerTarget=player.y-8;
+    if(keysDown['ArrowDown'])playerTarget=player.y+8;
+    player.y+=(playerTarget-player.y)*.15;
+    player.y=Math.max(0,Math.min(H-paddle.h,player.y));
+    updateCPU();
+    ball.x+=ball.vx;ball.y+=ball.vy;
+    if(ball.y-ball.r<=0||ball.y+ball.r>=H){ball.vy*=-1;ball.y=Math.max(ball.r,Math.min(H-ball.r,ball.y))}
+    if(ball.x-ball.r<=player.x+paddle.w&&ball.y>=player.y&&ball.y<=player.y+paddle.h&&ball.vx<0){ball.vx*=-1.05;ball.vy=((ball.y-(player.y+paddle.h/2))/(paddle.h/2))*6;ball.x=player.x+paddle.w+ball.r;spawnP(ball.x,ball.y,'#e0c85a',8)}
+    if(ball.x+ball.r>=cpu.x&&ball.y>=cpu.y&&ball.y<=cpu.y+paddle.h&&ball.vx>0){ball.vx*=-1.05;ball.vy=((ball.y-(cpu.y+paddle.h/2))/(paddle.h/2))*6;ball.x=cpu.x-ball.r;spawnP(ball.x,ball.y,'#8a8278',8);ballsSinceQuestion++}
+    if(ball.x<-ball.r){cpuScore++;streak=0;updateHUD();spawnP(0,ball.y,'#d94f4f',20);resetBall(1);checkGO()}
+    if(ball.x>W+ball.r){playerScore++;updateHUD();spawnP(W,ball.y,'#5ac878',20);resetBall(-1);checkGO()}
+    const s=Math.sqrt(ball.vx*ball.vx+ball.vy*ball.vy);if(s>12){ball.vx*=12/s;ball.vy*=12/s}
+    if(ballsSinceQuestion>=QUESTION_INTERVAL&&!questionActive)showQuestion();
+    updateP();
+}
+
+function draw(){
+    ctx.clearRect(0,0,W,H);
+    ctx.setLineDash([8,12]);ctx.strokeStyle='rgba(224,200,90,.12)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(W/2,0);ctx.lineTo(W/2,H);ctx.stroke();ctx.setLineDash([]);
+    ctx.beginPath();ctx.arc(W/2,H/2,50,0,Math.PI*2);ctx.strokeStyle='rgba(224,200,90,.06)';ctx.stroke();
+    ctx.shadowColor='#e0c85a';ctx.shadowBlur=12;ctx.fillStyle='#e0c85a';ctx.fillRect(player.x,player.y,paddle.w,paddle.h);
+    ctx.shadowColor='#8a8278';ctx.shadowBlur=8;ctx.fillStyle='#8a8278';ctx.fillRect(cpu.x,cpu.y,paddle.w,paddle.h);ctx.shadowBlur=0;
+    ctx.beginPath();ctx.arc(ball.x,ball.y,ball.r,0,Math.PI*2);ctx.fillStyle='#f5f1e8';ctx.shadowColor='#f5f1e8';ctx.shadowBlur=15;ctx.fill();ctx.shadowBlur=0;
+    drawP();
+}
+
+function gameLoop(){update();draw();requestAnimationFrame(gameLoop)}
+
+function startGame(){
+    playerScore=0;cpuScore=0;streak=0;bestStreak=0;questionsAnswered=0;questionsCorrect=0;ballsSinceQuestion=0;questionActive=false;particles=[];
+    shuffleQ();resetBall(1);resize();playerTarget=H/2;updateHUD();gameRunning=true;
+    document.getElementById('startScreen').classList.add('hidden');
+    document.getElementById('gameOver').classList.remove('visible');
+    document.getElementById('questionBar').classList.remove('visible');
+}
+
+document.getElementById('btnStart').addEventListener('click',startGame);
+document.getElementById('btnReplay').addEventListener('click',startGame);
+gameLoop();
+</script>
+</body>
+</html>
