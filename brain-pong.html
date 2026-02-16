@@ -66,7 +66,8 @@
     <div class="start-logo">Brain Pong</div>
     <div class="start-subtitle">par IAKAI</div>
     <div class="start-tagline">
-        Joue au Pong ET réponds aux questions<br>en même temps ! Double défi 🧠🏓
+        Joue au Pong ET réponds aux questions<br>en même temps ! Double défi 🧠🏓 <br>
+        (Si vous avez un chat, triple défi)
         <br><br>
         <span class="ar">إلعب وأجب في نفس الوقت — تحدٍّ مزدوج</span>
     </div>
@@ -174,7 +175,7 @@ const QUESTIONS=[
 
 const canvas=document.getElementById('gameCanvas'),ctx=canvas.getContext('2d');
 let W,H,gameRunning=false,playerScore=0,cpuScore=0,streak=0,bestStreak=0,questionsAnswered=0,questionsCorrect=0,questionQueue=[],ballsSinceQuestion=0,questionActive=false;
-const WINNING_SCORE=11,QUESTION_INTERVAL=4;
+const WINNING_SCORE=11,QUESTION_INTERVAL=3;
 const paddle={w:12,h:80},player={x:0,y:0},cpu={x:0,y:0,speed:4.2},ball={x:0,y:0,r:8,vx:5,vy:3,baseSpeed:5};
 let particles=[];
 
