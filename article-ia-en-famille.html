@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IAKAI — L'IA en famille : naviguer entre foi, éthique et technologie</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .article-container { max-width: 680px; margin: 0 auto; padding-bottom: 4rem; }
+        .article-meta { text-align: center; margin-bottom: 2.5rem; }
+        .article-date { font-size: 0.75rem; letter-spacing: 0.2em; color: var(--ocre-dore); text-transform: uppercase; margin-bottom: 0.8rem; }
+        .article-title { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 2rem; font-weight: 300; color: var(--blanc-lumiere); line-height: 1.4; margin-bottom: 0.8rem; }
+        .article-reading { font-size: 0.7rem; color: var(--gris-clair); letter-spacing: 0.15em; }
+        .article-hero { width: 100%; border-radius: 8px; margin-bottom: 2rem; border: 1px solid rgba(224, 200, 90, 0.1); }
+        .article-body h2 { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 1.4rem; font-weight: 400; color: var(--or-lumiere); margin: 2.5rem 0 1rem; letter-spacing: 0.05em; }
+        .article-body p { font-size: 1rem; line-height: 1.9; color: var(--gris-clair); margin-bottom: 1.2rem; }
+        .article-body strong { color: var(--blanc-lumiere); font-weight: 400; }
+        .article-body .highlight-box { background: rgba(58, 51, 42, 0.5); border-left: 3px solid var(--or-lumiere); padding: 1.2rem 1.5rem; margin: 1.5rem 0; border-radius: 0 6px 6px 0; }
+        .article-body .highlight-box p { margin-bottom: 0.5rem; font-size: 0.95rem; }
+        .article-body .highlight-box p:last-child { margin-bottom: 0; }
+        .article-body .tip { color: var(--or-lumiere); font-style: italic; }
+        .article-body .fridge-rules { background: rgba(224, 200, 90, 0.08); border: 1px solid rgba(224, 200, 90, 0.2); border-radius: 8px; padding: 1.5rem 2rem; margin: 2rem 0; }
+        .article-body .fridge-rules h3 { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 1.15rem; color: var(--or-lumiere); margin-bottom: 1rem; text-align: center; letter-spacing: 0.1em; }
+        .article-body .fridge-rules p { font-size: 0.9rem; line-height: 2; color: var(--blanc-lumiere); margin-bottom: 0.3rem; padding-left: 1.5rem; position: relative; }
+        .article-body .fridge-rules p::before { content: '→'; position: absolute; left: 0; color: var(--ocre-dore); }
+        .article-footer { margin-top: 3rem; padding-top: 2rem; border-top: 1px solid rgba(224, 200, 90, 0.1); text-align: center; }
+        .article-footer p { font-size: 0.85rem; color: var(--gris-clair); font-style: italic; line-height: 1.8; }
+        .article-back { display: inline-block; margin-top: 1.5rem; font-size: 0.75rem; color: var(--ocre-dore); text-decoration: none; letter-spacing: 0.15em; transition: color 0.3s; }
+        .article-back:hover { color: var(--or-lumiere); }
+        @media (max-width: 600px) { .article-title { font-size: 1.5rem; } .article-body h2 { font-size: 1.2rem; } .article-container { padding: 0 1rem 3rem; } }
+    </style>
+</head>
+<body data-page="articles">
+    <div class="rainbow-overlay"></div>
+
+    <a href="index.html" class="nav-logo"><img src="logo.png" alt="IAKAI"></a>
+    <nav class="nav-hamburger">
+        <button class="hamburger-btn" id="hamburgerBtn" aria-label="Menu" aria-expanded="false">
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+        </button>
+        <div class="nav-menu" id="navMenu">
+            <a href="comics.html" class="nav-link">BD</a>
+            <a href="dessins.html" class="nav-link">Dessins</a>
+            <a href="videos.html" class="nav-link">Vidéos</a>
+            <a href="apps.html" class="nav-link">Apps &amp; Jeux</a>
+            <a href="atelier.html" class="nav-link">Atelier</a>
+            <a href="articles.html" class="nav-link active">Articles</a>
+            <div class="nav-divider"></div>
+            <a href="mailto:contact@iakai.fr" class="nav-link nav-contact">Contact</a>
+        </div>
+    </nav>
+
+    <main class="container">
+        <header class="site-header">
+            <a href="index.html" class="site-title-link">
+                <h1 class="site-title">IAKAI</h1>
+            </a>
+            <p class="site-tagline">L'art de raconter autrement</p>
+        </header>
+
+        <article class="article-container">
+            <div class="article-meta">
+                <p class="article-date">Février 2026</p>
+                <h2 class="article-title">L'IA en famille : naviguer entre foi, éthique et technologie</h2>
+                <p class="article-reading">5 min de lecture</p>
+            </div>
+
+            <img src="images/article-ia-famille.jpg" alt="Famille utilisant l'IA ensemble autour d'une tablette" class="article-hero">
+
+            <div class="article-body">
+
+                <h2>IAKAI : démystifier l'IA par la pratique</h2>
+
+                <p>IAKAI est né d'une conviction simple : la meilleure façon de comprendre l'IA, c'est de l'explorer. Pas dans un cours théorique, mais en créant. En retravaillant une peinture. En générant une BD qu'on complète au crayon en famille. En jouant à un quiz où c'est l'IA qui pose les questions.</p>
+
+                <p>Chaque création sur ce site est une façon de montrer ce que l'IA sait faire — et surtout ce qu'elle ne sait pas faire. Car c'est en la pratiquant qu'on apprend à la démystifier, à repérer ses forces, ses limites et ses pièges. Cet article est le prolongement naturel de cette démarche : un guide pour toute la famille pour naviguer dans ce nouveau monde sans perdre le cap de nos valeurs.</p>
+
+                <h2>L'IA est là, autant l'apprivoiser avec sagesse</h2>
+
+                <p>L'intelligence artificielle n'est plus de la science-fiction. Elle est dans nos téléphones, dans les moteurs de recherche, dans les filtres des réseaux sociaux, dans les devoirs de nos enfants. On peut choisir de l'ignorer, mais elle ne nous ignorera pas.</p>
+
+                <p>L'utiliser intelligemment, c'est refuser deux extrêmes : le rejet total par peur, ou l'adoption aveugle sans surveillance. C'est trouver ce juste milieu, cette voie de l'équilibre si chère à notre éthique. Comme le feu : mal maîtrisé, il brûle. Bien utilisé, il éclaire et réchauffe.</p>
+
+                <h2>Comprendre ce qu'elle est (et ce qu'elle n'est pas)</h2>
+
+                <p><strong>Pour les plus jeunes (5-10 ans) :</strong> l'IA est comme un assistant très rapide qui a lu tout Internet. Si tu lui demandes de dessiner un chat-pirate, il ne l'imagine pas comme toi. Il regarde des milliers d'images de chats et de pirates qu'il a en mémoire et les mélange très vite. Il ne sait rien, il calcule.</p>
+
+                <p><strong>Pour les ados :</strong> c'est un outil statistique sophistiqué. ChatGPT ne réfléchit pas à votre question — il prédit mathématiquement le mot le plus probable qui doit suivre le précédent. C'est un perroquet très savant, pas un oracle.</p>
+
+                <div class="highlight-box">
+                    <p class="tip">La règle d'or : l'IA est un copilote, pas le pilote. Elle ne doit jamais remplacer la réflexion humaine, l'effort créatif ou l'interaction sociale. Elle est là pour augmenter nos capacités, pas pour remplacer l'intelligence que Dieu nous a donnée.</p>
+                </div>
+
+                <h2>Les pièges à connaître</h2>
+
+                <p><strong>Les deepfakes et les fausses vidéos.</strong> L'IA sait créer des vidéos où une personne dit des choses qu'elle n'a jamais dites. Une voix familière, un visage connu, un discours inventé de toutes pièces. Si une vidéo vous choque ou vous semble incroyable, c'est peut-être qu'elle l'est — au sens propre.</p>
+
+                <div class="highlight-box">
+                    <p class="tip">Réflexe : avant de partager, vérifiez la source. La médisance et la propagation de faux scoops sont graves. En cas de doute, abstenez-vous.</p>
+                </div>
+
+                <p><strong>Les devoirs faits par ChatGPT.</strong> C'est tentant. On pose la question, on copie la réponse, c'est plié. Sauf que le cerveau, lui, n'a rien appris. C'est comme demander à quelqu'un de faire vos pompes à votre place et s'étonner de ne pas avoir de muscles. C'est aussi une forme de tromperie, contraire à l'honnêteté intellectuelle.</p>
+
+                <div class="highlight-box">
+                    <p class="tip">Réflexe : utilisez l'IA pour comprendre, pas pour copier. Demandez-lui d'expliquer un concept autrement, de vérifier votre raisonnement — pas de faire le travail à votre place. La recherche du savoir demande un effort personnel.</p>
+                </div>
+
+                <p><strong>La bulle algorithmique.</strong> Les réseaux sociaux utilisent l'IA pour vous montrer ce que vous aimez voir. Vous ne voyez plus que des opinions qui confirment les vôtres. Le monde semble simple, tout le monde pense comme vous. C'est confortable, mais c'est un piège.</p>
+
+                <div class="highlight-box">
+                    <p class="tip">Réflexe : cherchez volontairement des points de vue différents. Apprenez à vos enfants que désaccord ne veut pas dire ennemi.</p>
+                </div>
+
+                <p><strong>Les données personnelles (Amanah).</strong> Quand c'est gratuit, c'est vous le produit. Tout ce qu'on écrit à ChatGPT ou les photos qu'on envoie à des applis d'IA peuvent être stockés et utilisés pour entraîner les modèles. La préservation de notre vie privée et celle de notre famille est un dépôt (amanah) que nous devons protéger.</p>
+
+                <div class="highlight-box">
+                    <p class="tip">Réflexe : on ne donne jamais son nom complet, son adresse, son école ou des secrets de famille à une IA.</p>
+                </div>
+
+                <h2>Développer l'esprit critique en famille</h2>
+
+                <p><strong>La chasse aux hallucinations.</strong> Les IA inventent parfois des faits avec une assurance déconcertante. Exercice simple : posez une question à l'IA sur un sujet que vous maîtrisez bien. Vérifiez ensemble la réponse. Apprenez à l'enfant à ne jamais faire confiance aveuglément. « L'IA a dit ça, maintenant, comment on vérifie ? »</p>
+
+                <p><strong>Discuter des biais.</strong> L'IA apprend sur Internet. Internet contient des stéréotypes. L'IA les reproduit. Montrez à vos ados que si on demande une image de « PDG », l'IA générera souvent un homme occidental en costume. Discutez-en : pourquoi ? Est-ce la réalité ?</p>
+
+                <p><strong>Religion et éthique : l'IA n'est pas un savant.</strong> C'est un point capital pour nous. Les IA sont entraînées sur des milliards de textes avec un prisme culturel dominant souvent éloigné de nos valeurs. L'IA peut répondre avec une assurance bluffante à des questions religieuses ou éthiques, mais ses réponses peuvent être basées sur des sources non fiables, des interprétations erronées ou des amalgames. L'IA n'a aucune autorité religieuse — elle ne possède ni la science sacrée, ni le contexte, ni la spiritualité, ni l'intention nécessaires. Sur les questions de foi, de pratique et de guidance morale, l'avis de savants qualifiés et d'imams prévaut toujours sur celui de la machine.</p>
+
+                <h2>L'IA comme tremplin créatif</h2>
+
+                <p>C'est là que ça devient passionnant — et c'est le cœur d'IAKAI.</p>
+
+                <p><strong>Histoires collaboratives.</strong> Demandez à l'IA d'inventer le début d'une histoire avec des éléments choisis par vos enfants (par exemple : « un voyageur dans le désert qui découvre une ancienne cité », ou « une histoire sur la patience avec un animal rigolo »). Lisez le début, et demandez-leur d'imaginer la suite au crayon.</p>
+
+                <p><strong>Création d'images.</strong> Organisez un défi familial : qui créera l'image la plus belle d'une mosquée futuriste, ou la calligraphie la plus originale ? C'est en formulant des instructions à l'IA qu'on comprend comment elle fonctionne.</p>
+
+                <p><strong>BD à compléter.</strong> L'IA génère les dessins, mais les bulles sont vides. C'est l'enfant qui écrit l'histoire. L'écran devient un point de départ, pas une fin en soi.</p>
+
+                <p>Passer de <strong>consommateur passif à créateur actif</strong>, c'est le vrai pouvoir qu'on peut reprendre sur les écrans.</p>
+
+                <h2>Poser un cadre sain</h2>
+
+                <p>Comme pour les jeux vidéo ou les réseaux sociaux, il faut des règles claires dans le foyer.</p>
+
+                <p><strong>L'âge compte.</strong> ChatGPT est officiellement interdit aux moins de 13 ans et nécessite l'accord parental jusqu'à 18 ans. Pour les plus jeunes, l'utilisation doit toujours être supervisée.</p>
+
+                <p><strong>Pas d'IA émotionnelle.</strong> Il faut être vigilant avec les applications de type « petit ami IA » ou « confident IA ». Un enfant ne doit pas développer d'attachement émotionnel ou de dépendance affective à une machine qui ne fait que simuler l'empathie. Le cœur doit rester attaché au Réel, pas au virtuel.</p>
+
+                <p><strong>La charte familiale.</strong> Définissez ensemble quand et comment on utilise l'IA. Par exemple : « Pas d'IA pour les devoirs avant d'avoir essayé tout seul pendant 30 minutes avec ses propres capacités. »</p>
+
+                <h2>5 règles à afficher sur le frigo</h2>
+
+                <div class="fridge-rules">
+                    <h3>Nos règles IA en famille</h3>
+                    <p>Je vérifie avant de croire (et surtout avant de partager)</p>
+                    <p>J'utilise l'IA pour apprendre avec honnêteté, pas pour tricher</p>
+                    <p>Je reste curieux : je cherche des avis différents du mien</p>
+                    <p>Je crée plus que je ne consomme</p>
+                    <p>En cas de doute éthique ou religieux, j'en parle avec ma famille, pas à la machine</p>
+                </div>
+
+            </div>
+
+            <div class="article-footer">
+                <p>L'IA ne remplacera jamais une discussion en famille autour d'un thé, ni le plaisir de dessiner ensemble un dimanche après-midi. Elle peut juste nous aider à retrouver le chemin de la créativité.</p>
+                <a href="articles.html" class="article-back">← Retour aux articles</a>
+            </div>
+
+        </article>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
