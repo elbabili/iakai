@@ -824,3 +824,111 @@ body {
     .article-card-img { width: 100%; height: 180px; }
     .article-card-content { padding: 1rem 1.2rem; }
 }
+
+/* ═══════════════════════════════════════════
+   FOOTER - IAKAI
+   ═══════════════════════════════════════════ */
+
+footer {
+    margin-top: 4rem;
+    padding: 3rem 1.5rem;
+    border-top: 1px solid rgba(224, 200, 90, 0.15);
+    background: rgba(58, 51, 42, 0.3);
+}
+
+.footer-container {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.footer-message {
+    font-size: 0.95rem;
+    line-height: 1.8;
+    color: var(--gris-clair);
+    margin-bottom: 1.8rem;
+}
+
+.footer-message strong {
+    color: var(--blanc-lumiere);
+    font-weight: 400;
+}
+
+.footer-support {
+    display: inline-block;
+    margin-bottom: 2rem;
+}
+
+.footer-support-link {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    background: rgba(224, 200, 90, 0.15);
+    border: 1px solid rgba(224, 200, 90, 0.3);
+    border-radius: 6px;
+    color: var(--or-lumiere);
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    letter-spacing: 0.05em;
+}
+
+.footer-support-link:hover {
+    background: rgba(224, 200, 90, 0.25);
+    border-color: rgba(224, 200, 90, 0.5);
+    color: var(--blanc-lumiere);
+}
+
+.footer-links {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid rgba(224, 200, 90, 0.1);
+}
+
+.footer-link {
+    color: var(--gris-clair);
+    text-decoration: none;
+    font-size: 0.85rem;
+    letter-spacing: 0.1em;
+    transition: color 0.3s ease;
+}
+
+.footer-link:hover {
+    color: var(--or-lumiere);
+}
+
+.footer-copyright {
+    font-size: 0.75rem;
+    color: var(--gris-moyen);
+    letter-spacing: 0.15em;
+}
+
+@media (max-width: 600px) {
+    footer {
+        padding: 2.5rem 1rem;
+        margin-top: 3rem;
+    }
+
+    .footer-message {
+        font-size: 0.9rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .footer-links {
+        gap: 1rem;
+        margin-bottom: 1.2rem;
+        padding-bottom: 1.2rem;
+    }
+
+    .footer-link {
+        font-size: 0.8rem;
+    }
+
+    .footer-support-link {
+        padding: 0.6rem 1.2rem;
+        font-size: 0.9rem;
+    }
+}
