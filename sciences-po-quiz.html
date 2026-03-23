@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sciences Po Quiz — IAKAI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{
+            --fond:#2e2820;--fond-card:#3a332a;
+            --ocre-sombre:#6b5a3e;--ocre-dore:#c4a035;--or:#e0c85a;
+            --blanc:#f5f1e8;--gris:#bfb9ae;--gris-moyen:#8a8278;
+            --vert:#5ac878;--rouge:#d94f4f;
+            --histoire:#C2185B;--contemporain:#1565C0;--anglais:#2E7D32;
+        }
+        html{scroll-behavior:smooth}
+        body{
+            min-height:100vh;background:var(--fond);color:var(--blanc);
+            font-family:'Cormorant Garamond',Georgia,serif;overflow-x:hidden;
+        }
+
+        /* ═══ Rainbow overlay ═══ */
+        .rainbow-overlay{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+        .rainbow-overlay::before{
+            content:'';position:absolute;width:200%;height:200%;top:-50%;left:-50%;
+            background:radial-gradient(ellipse at 10% 10%,rgba(255,180,100,.14) 0%,transparent 45%),radial-gradient(ellipse at 80% 15%,rgba(180,140,200,.12) 0%,transparent 40%),radial-gradient(ellipse at 50% 60%,rgba(100,180,160,.10) 0%,transparent 45%),radial-gradient(ellipse at 20% 80%,rgba(220,170,80,.13) 0%,transparent 40%);
+            animation:rd 20s ease-in-out infinite;
+        }
+        @keyframes rd{0%{transform:translate(0,0)}33%{transform:translate(5%,8%)}66%{transform:translate(10%,15%)}100%{transform:translate(0,0)}}
+
+        /* ═══ Screens ═══ */
+        .screen{display:none;flex-direction:column;align-items:center;min-height:100vh;padding:2rem 1rem;position:relative;z-index:1}
+        .screen.active{display:flex}
+
+        /* ═══ Nav ═══ */
+        .nav-back{position:fixed;top:1rem;left:1rem;z-index:20;font-size:.7rem;color:var(--gris-moyen);text-decoration:none;letter-spacing:.15em;opacity:.6;transition:all .3s}
+        .nav-back:hover{color:var(--or);opacity:1}
+
+        /* ═══ HOME ═══ */
+        .home-header{text-align:center;margin-bottom:1.2rem;animation:slideDown .8s ease-out}
+        .home-icon{font-size:3rem;margin-bottom:.3rem;filter:drop-shadow(0 0 15px rgba(224,200,90,.3))}
+        .home-title{font-size:clamp(1.8rem,5vw,2.8rem);font-weight:300;letter-spacing:.1em;color:var(--or);line-height:1.2}
+        .home-subtitle{font-size:clamp(.85rem,2.5vw,1rem);color:var(--gris-moyen);font-weight:300;letter-spacing:.2em;text-transform:uppercase;margin-top:.4rem;font-style:italic}
+
+        .concours-info{
+            max-width:440px;text-align:center;margin-bottom:1.5rem;
+            background:rgba(58,51,42,.3);border:1px solid rgba(224,200,90,.1);
+            border-radius:6px;padding:1rem 1.2rem;
+        }
+        .concours-info .ci-title{font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ocre-dore);margin-bottom:.6rem}
+        .concours-info .ci-line{font-size:.82rem;color:var(--gris);line-height:1.7;font-weight:300}
+        .concours-info .ci-line strong{color:var(--blanc);font-weight:400}
+        .concours-info .ci-themes{margin-top:.5rem;display:flex;gap:.4rem;justify-content:center;flex-wrap:wrap}
+        .concours-info .ci-tag{
+            font-size:.7rem;padding:.2rem .6rem;border-radius:3px;
+            background:rgba(224,200,90,.08);border:1px solid rgba(224,200,90,.12);color:var(--ocre-dore);
+            font-family:'JetBrains Mono',monospace;
+        }
+
+        .count-selector{
+            display:flex;align-items:center;gap:.6rem;margin-bottom:1.5rem;
+            background:rgba(58,51,42,.4);border-radius:6px;padding:.5rem 1rem;
+            border:1px solid rgba(224,200,90,.1);
+        }
+        .count-selector span{color:var(--gris-moyen);font-size:.8rem;font-family:'JetBrains Mono',monospace}
+        .count-btn{
+            background:transparent;border:1px solid rgba(224,200,90,.12);color:var(--gris-moyen);
+            border-radius:4px;padding:.25rem .6rem;cursor:pointer;
+            font-family:'JetBrains Mono',monospace;font-size:.8rem;transition:all .2s;
+        }
+        .count-btn.active{background:rgba(224,200,90,.15);border-color:var(--or);color:var(--or);font-weight:600}
+        .count-btn:hover{border-color:var(--or);color:var(--or)}
+
+        .theme-buttons{display:flex;flex-direction:column;gap:.8rem;width:100%;max-width:420px}
+        .theme-btn{
+            border:none;border-radius:6px;padding:1.2rem 1.3rem;cursor:pointer;
+            display:flex;align-items:center;gap:1rem;color:#fff;text-align:left;
+            transition:all .3s;font-family:'Cormorant Garamond',serif;
+        }
+        .theme-btn:hover{transform:translateY(-3px)}
+        .theme-btn .emoji{font-size:1.8rem}
+        .theme-btn .label{font-size:1.1rem;font-weight:400;letter-spacing:.05em}
+        .theme-btn .count{font-size:.7rem;opacity:.8;font-family:'JetBrains Mono',monospace;margin-top:.15rem}
+        .theme-btn .arrow{margin-left:auto;font-size:1.1rem;opacity:.5}
+        .theme-btn.histoire{background:linear-gradient(135deg,#880E4F,#C2185B,#E91E63);box-shadow:0 6px 25px #C2185B44}
+        .theme-btn.histoire:hover{box-shadow:0 10px 35px #C2185B66}
+        .theme-btn.contemporain{background:linear-gradient(135deg,#0D47A1,#1565C0,#42A5F5);box-shadow:0 6px 25px #1565C044}
+        .theme-btn.contemporain:hover{box-shadow:0 10px 35px #1565C066}
+        .theme-btn.anglais{background:linear-gradient(135deg,#1B5E20,#2E7D32,#66BB6A);box-shadow:0 6px 25px #2E7D3244}
+        .theme-btn.anglais:hover{box-shadow:0 10px 35px #2E7D3266}
+
+        .theme-detail{font-size:.65rem;color:rgba(255,255,255,.6);margin-top:.1rem;font-family:'JetBrains Mono',monospace}
+
+        /* ═══ QUIZ ═══ */
+        #quiz-screen.active{justify-content:flex-start;padding-top:1.5rem}
+        .quiz-container{max-width:600px;width:100%}
+        .quiz-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:.8rem}
+        .quit-btn{
+            background:rgba(58,51,42,.5);border:1px solid rgba(224,200,90,.15);border-radius:4px;
+            padding:.35rem .7rem;color:var(--gris);cursor:pointer;font-size:.8rem;
+            font-family:'Cormorant Garamond',serif;transition:all .2s;
+        }
+        .quit-btn:hover{border-color:var(--or);color:var(--or)}
+        .quiz-counter{font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--gris-moyen)}
+        .quiz-counter .current{font-weight:600}
+        .quiz-counter .score-display{margin-left:.8rem;color:var(--or)}
+
+        .progress-bar{background:rgba(224,200,90,.08);border-radius:99px;height:3px;margin-bottom:1.2rem;overflow:hidden}
+        .progress-fill{height:100%;border-radius:99px;transition:width .5s ease}
+
+        .theme-badge{
+            display:inline-flex;align-items:center;gap:.3rem;border-radius:99px;
+            padding:.25rem .8rem;margin-bottom:1rem;font-size:.75rem;font-weight:400;
+        }
+
+        .question-area{transition:opacity .3s,transform .3s}
+        .question-area.fade-out{opacity:0;transform:translateY(10px)}
+        .question-text{font-size:clamp(1rem,3.5vw,1.3rem);font-weight:400;line-height:1.5;margin-bottom:1.3rem;color:var(--blanc)}
+
+        .choices{display:flex;flex-direction:column;gap:.5rem}
+        .choice-btn{
+            background:rgba(58,51,42,.4);border:1px solid rgba(224,200,90,.1);
+            border-radius:6px;padding:.85rem 1rem;color:var(--gris);font-size:.9rem;
+            text-align:left;cursor:pointer;font-family:'Cormorant Garamond',serif;
+            line-height:1.4;transition:all .25s;display:flex;align-items:center;gap:.7rem;
+        }
+        .choice-btn:not(.disabled):hover{border-color:rgba(224,200,90,.3);background:rgba(58,51,42,.6);color:var(--blanc)}
+        .choice-btn.disabled{cursor:default}
+        .choice-btn.correct{background:rgba(90,200,120,.12);border-color:rgba(90,200,120,.4);color:var(--vert)}
+        .choice-btn.wrong{background:rgba(217,79,79,.12);border-color:rgba(217,79,79,.4);color:var(--rouge)}
+
+        .choice-letter{
+            width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+            font-size:.7rem;font-weight:600;font-family:'JetBrains Mono',monospace;flex-shrink:0;
+            background:rgba(224,200,90,.06);border:1px solid rgba(224,200,90,.12);
+        }
+        .correct .choice-letter{background:rgba(90,200,120,.2);border-color:var(--vert)}
+        .wrong .choice-letter{background:rgba(217,79,79,.2);border-color:var(--rouge)}
+
+        .explanation{
+            margin-top:1rem;background:rgba(224,200,90,.06);border:1px solid rgba(224,200,90,.15);
+            border-radius:6px;padding:.9rem 1rem;animation:slideUp .3s ease-out;
+        }
+        .explanation-label{font-size:.65rem;font-weight:600;color:var(--or);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.3rem;font-family:'JetBrains Mono',monospace}
+        .explanation-text{font-size:.85rem;color:var(--gris);line-height:1.6;font-weight:300}
+
+        .next-btn{
+            width:100%;margin-top:1rem;border:none;border-radius:6px;padding:.85rem;
+            color:#fff;font-size:1rem;font-weight:400;cursor:pointer;
+            font-family:'Cormorant Garamond',serif;letter-spacing:.05em;
+            animation:slideUp .3s ease-out;transition:filter .2s;
+        }
+        .next-btn:hover{filter:brightness(1.15)}
+
+        /* ═══ RESULTS ═══ */
+        #results-screen.active{justify-content:flex-start;padding-top:2rem}
+        .results-container{max-width:600px;width:100%;animation:slideDown .6s ease-out}
+        .results-header{text-align:center;margin-bottom:1.5rem}
+        .results-emoji{font-size:3.5rem;margin-bottom:.4rem}
+        .results-theme{font-size:1.6rem;font-weight:300;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:.4rem}
+        .results-score{font-size:2.5rem;font-weight:600;font-family:'JetBrains Mono',monospace;color:var(--or)}
+        .results-pct{font-size:.85rem;color:var(--gris-moyen);margin-top:.2rem;font-family:'JetBrains Mono',monospace}
+        .results-msg{font-size:1rem;margin-top:.8rem;color:var(--gris);font-weight:300;font-style:italic}
+
+        .results-progress{background:rgba(224,200,90,.08);border-radius:99px;height:8px;margin-bottom:1.5rem;overflow:hidden}
+        .results-progress-fill{height:100%;border-radius:99px;transition:width 1s ease-out}
+
+        .wrong-section{margin-bottom:1.5rem}
+        .wrong-title{font-size:1rem;color:var(--rouge);margin-bottom:.8rem;font-weight:400}
+        .wrong-card{background:rgba(58,51,42,.3);border:1px solid rgba(217,79,79,.15);border-radius:6px;padding:.9rem;margin-bottom:.6rem}
+        .wrong-card .wq{font-size:.85rem;font-weight:400;margin-bottom:.4rem;color:var(--blanc)}
+        .wrong-card .wa{font-size:.78rem;color:var(--rouge);margin-bottom:.2rem}
+        .wrong-card .wc{font-size:.78rem;color:var(--vert)}
+        .wrong-card .we{font-size:.78rem;color:var(--gris-moyen);margin-top:.4rem;font-style:italic;line-height:1.4}
+
+        .action-buttons{display:flex;gap:.6rem}
+        .action-btn{
+            flex:1;border-radius:6px;padding:.85rem;font-size:.95rem;font-weight:400;
+            cursor:pointer;font-family:'Cormorant Garamond',serif;transition:filter .2s;letter-spacing:.05em;
+        }
+        .action-btn:hover{filter:brightness(1.15)}
+        .action-btn.primary{border:none;color:#fff}
+        .action-btn.secondary{background:rgba(58,51,42,.4);border:1px solid rgba(224,200,90,.15);color:var(--gris)}
+
+        @keyframes slideDown{from{opacity:0;transform:translateY(-25px)}to{opacity:1;transform:translateY(0)}}
+        @keyframes slideUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+        @media(max-width:480px){
+            .screen.active{padding:1.5rem .75rem}
+            .theme-btn{padding:1rem 1.1rem}
+            .count-selector{flex-wrap:wrap;justify-content:center}
+            .action-buttons{flex-direction:column}
+        }
+    </style>
+</head>
+<body>
+
+<div class="rainbow-overlay"></div>
+<a href="apps.html" class="nav-back">&larr; IAKAI</a>
+
+<!-- ════════════════ HOME ════════════════ -->
+<div id="home-screen" class="screen active">
+    <div class="home-header">
+        <div class="home-icon">🎓</div>
+        <h1 class="home-title">Sciences Po</h1>
+        <p class="home-subtitle">Quiz de Révisions</p>
+    </div>
+
+    <div class="concours-info">
+        <div class="ci-title">Concours commun 2026 &mdash; Réseau ScPo</div>
+        <div class="ci-line"><strong>Histoire</strong> </div>
+        <div class="ci-line"><strong>Questions contemporaines</strong> : Solidarités - Le vivant </div>
+        <div class="ci-line"><strong>Anglais</strong> </div>
+    </div>
+
+    <div class="count-selector">
+        <span>Questions :</span>
+        <button class="count-btn" data-count="10">10</button>
+        <button class="count-btn active" data-count="20">20</button>
+        <button class="count-btn" data-count="30">30</button>
+        <button class="count-btn" data-count="50">50</button>
+    </div>
+
+    <div class="theme-buttons">
+        <button class="theme-btn histoire" data-theme="histoire">
+            <span class="emoji">📜</span>
+            <div>
+                <div class="label">Histoire</div>
+                <div class="count"></div>
+                <div class="theme-detail">Depuis les ann&eacute;es 1930 &middot; France + Relations internationales</div>
+            </div>
+            <span class="arrow">&rarr;</span>
+        </button>
+        <button class="theme-btn contemporain" data-theme="contemporain">
+            <span class="emoji">🧠</span>
+            <div>
+                <div class="label">Questions Contemporaines</div>
+                <div class="count"></div>
+                <div class="theme-detail">Solidarit&eacute;s &middot; Le vivant &middot; Concepts transversaux</div>
+            </div>
+            <span class="arrow">&rarr;</span>
+        </button>
+        <button class="theme-btn anglais" data-theme="anglais">
+            <span class="emoji">🇬🇧</span>
+            <div>
+                <div class="label">Anglais</div>
+                <div class="count"></div>
+                <div class="theme-detail">Faux-amis &middot; Grammaire &middot; Vocabulaire politique &middot; Essai</div>
+            </div>
+            <span class="arrow">&rarr;</span>
+        </button>
+    </div>
+</div>
+
+<!-- ════════════════ QUIZ ════════════════ -->
+<div id="quiz-screen" class="screen">
+    <div class="quiz-container">
+        <div class="quiz-header">
+            <button class="quit-btn" onclick="goHome()">&larr; Quitter</button>
+            <div class="quiz-counter">
+                <span id="q-current" class="current">1</span><span> / <span id="q-total">20</span></span>
+                <span id="q-score" class="score-display">&#11088; 0</span>
+            </div>
+        </div>
+        <div class="progress-bar"><div id="progress-fill" class="progress-fill"></div></div>
+        <div id="quiz-badge" class="theme-badge"></div>
+        <div id="question-area" class="question-area">
+            <h2 id="question-text" class="question-text"></h2>
+            <div id="choices" class="choices"></div>
+            <div id="explanation-box" class="explanation" style="display:none">
+                <div class="explanation-label">&#128161; Explication</div>
+                <p id="explanation-text" class="explanation-text"></p>
+            </div>
+            <button id="next-btn" class="next-btn" style="display:none" onclick="nextQuestion()">Question suivante &rarr;</button>
+        </div>
+    </div>
+</div>
+
+<!-- ════════════════ RESULTS ════════════════ -->
+<div id="results-screen" class="screen">
+    <div class="results-container">
+        <div class="results-header">
+            <div id="results-emoji" class="results-emoji"></div>
+            <h2 id="results-theme" class="results-theme"></h2>
+            <div id="results-score" class="results-score"></div>
+            <div id="results-pct" class="results-pct"></div>
+            <p id="results-msg" class="results-msg"></p>
+        </div>
+        <div class="results-progress"><div id="results-progress-fill" class="results-progress-fill"></div></div>
+        <div id="wrong-section" class="wrong-section" style="display:none">
+            <h3 class="wrong-title">&#128221; &Agrave; revoir (<span id="wrong-count"></span>) :</h3>
+            <div id="wrong-cards"></div>
+        </div>
+        <div class="action-buttons">
+            <button id="retry-btn" class="action-btn primary" onclick="retry()">&#128260; Recommencer</button>
+            <button class="action-btn secondary" onclick="goHome()">&#127968; Accueil</button>
+        </div>
+    </div>
+</div>
+
+<!-- ═══ Questions (fichier externe) ═══ -->
+<script src="questions-quizz.js"></script>
+
+<!-- ═══ Logique ═══ -->
+<script>
+const THEME_CONFIG={
+    histoire:{label:"Histoire",emoji:"\u{1F4DC}",color:"#C2185B",gradient:"linear-gradient(135deg,#880E4F,#C2185B,#E91E63)"},
+    contemporain:{label:"Questions Contemporaines",emoji:"\u{1F9E0}",color:"#1565C0",gradient:"linear-gradient(135deg,#0D47A1,#1565C0,#42A5F5)"},
+    anglais:{label:"Anglais",emoji:"\u{1F1EC}\u{1F1E7}",color:"#2E7D32",gradient:"linear-gradient(135deg,#1B5E20,#2E7D32,#66BB6A)"},
+};
+
+let currentTheme=null,currentConfig=null,questions=[],currentQ=0,selected=null,score=0,answers=[],questionCount=20;
+
+function shuffle(arr){const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function $(id){return document.getElementById(id)}
+function showScreen(name){document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));$(name+"-screen").classList.add("active")}
+
+document.addEventListener("DOMContentLoaded",()=>{
+    Object.keys(THEME_CONFIG).forEach(key=>{
+        const el=document.querySelector(".theme-btn."+key+" .count");
+        if(el)el.textContent=QUESTIONS[key].length+" questions disponibles";
+    });
+    document.querySelectorAll(".count-btn").forEach(btn=>{
+        btn.addEventListener("click",()=>{
+            questionCount=parseInt(btn.dataset.count);
+            document.querySelectorAll(".count-btn").forEach(b=>b.classList.remove("active"));
+            btn.classList.add("active");
+        });
+    });
+    document.querySelectorAll(".theme-btn").forEach(btn=>{
+        btn.addEventListener("click",()=>startQuiz(btn.dataset.theme));
+    });
+    showScreen("home");
+});
+
+function startQuiz(theme){
+    currentTheme=theme;currentConfig=THEME_CONFIG[theme];
+    questions=shuffle(QUESTIONS[theme]).slice(0,questionCount);
+    currentQ=0;selected=null;score=0;answers=[];
+    const badge=$("quiz-badge");
+    badge.textContent=currentConfig.emoji+" "+currentConfig.label;
+    badge.style.background=currentConfig.color+"22";
+    badge.style.border="1px solid "+currentConfig.color+"44";
+    badge.style.color=currentConfig.color;
+    $("progress-fill").style.background=currentConfig.gradient;
+    showScreen("quiz");renderQuestion();
+}
+
+function renderQuestion(){
+    const q=questions[currentQ];const area=$("question-area");area.classList.remove("fade-out");
+    $("q-current").textContent=currentQ+1;$("q-current").style.color=currentConfig.color;
+    $("q-total").textContent=questions.length;$("q-score").textContent="\u2B50 "+score;
+    $("progress-fill").style.width=((currentQ+1)/questions.length*100)+"%";
+    $("question-text").textContent=q.q;
+    const ch=$("choices");ch.innerHTML="";
+    q.choices.forEach((c,i)=>{
+        const btn=document.createElement("button");btn.className="choice-btn";
+        btn.innerHTML="<span class=\"choice-letter\">"+String.fromCharCode(65+i)+"</span><span>"+c+"</span>";
+        btn.addEventListener("click",()=>handleAnswer(i));ch.appendChild(btn);
+    });
+    $("explanation-box").style.display="none";$("next-btn").style.display="none";selected=null;
+}
+
+function handleAnswer(idx){
+    if(selected!==null)return;selected=idx;
+    const q=questions[currentQ];const correct=idx===q.answer;
+    if(correct)score++;answers.push({question:q,selected:idx,correct:correct});
+    $("q-score").textContent="\u2B50 "+score;
+    document.querySelectorAll(".choice-btn").forEach((btn,i)=>{
+        btn.classList.add("disabled");
+        if(i===q.answer){btn.classList.add("correct");btn.querySelector(".choice-letter").textContent="\u2713"}
+        else if(i===idx&&!correct){btn.classList.add("wrong");btn.querySelector(".choice-letter").textContent="\u2717"}
+    });
+    $("explanation-text").textContent=q.explanation;$("explanation-box").style.display="block";
+    const nb=$("next-btn");nb.style.display="block";nb.style.background=currentConfig.gradient;
+    nb.textContent=(currentQ+1>=questions.length)?"Voir les r\u00E9sultats \u2192":"Question suivante \u2192";
+}
+
+function nextQuestion(){
+    $("question-area").classList.add("fade-out");
+    setTimeout(()=>{if(currentQ+1>=questions.length)showResults();else{currentQ++;renderQuestion()}},250);
+}
+
+function showResults(){
+    const pct=Math.round(score/questions.length*100);
+    const emoji=pct>=80?"\u{1F3C6}":pct>=60?"\u{1F44F}":pct>=40?"\u{1F4DA}":"\u{1F4AA}";
+    const msg=pct>=80?"Excellent ! Tu ma\u00EEtrises bien ce th\u00E8me.":pct>=60?"Bon travail ! Quelques points \u00E0 consolider.":pct>=40?"Des bases solides, mais encore du travail.":"Continue de r\u00E9viser, tu vas progresser !";
+    $("results-emoji").textContent=emoji;
+    const tt=$("results-theme");tt.textContent=currentConfig.emoji+" "+currentConfig.label;
+    tt.style.background="linear-gradient(135deg,"+currentConfig.color+",#FFD700)";
+    tt.style.webkitBackgroundClip="text";tt.style.webkitTextFillColor="transparent";
+    $("results-score").textContent=score+" / "+questions.length;
+    $("results-pct").textContent=pct+"% de bonnes r\u00E9ponses";$("results-msg").textContent=msg;
+    $("results-progress-fill").style.background=currentConfig.gradient;
+    $("results-progress-fill").style.width="0%";
+    const wrong=answers.filter(a=>!a.correct);const ws=$("wrong-section");
+    if(wrong.length>0){
+        ws.style.display="block";$("wrong-count").textContent=wrong.length+" erreur"+(wrong.length>1?"s":"");
+        const container=$("wrong-cards");container.innerHTML="";
+        wrong.forEach(a=>{
+            const card=document.createElement("div");card.className="wrong-card";
+            card.innerHTML="<div class=\"wq\">"+a.question.q+"</div><div class=\"wa\">\u2717 Ta r\u00E9ponse : "+a.question.choices[a.selected]+"</div><div class=\"wc\">\u2713 Bonne r\u00E9ponse : "+a.question.choices[a.question.answer]+"</div><div class=\"we\">"+a.question.explanation+"</div>";
+            container.appendChild(card);
+        });
+    }else ws.style.display="none";
+    $("retry-btn").style.background=currentConfig.gradient;
+    showScreen("results");
+    setTimeout(()=>{$("results-progress-fill").style.width=pct+"%"},100);
+}
+
+function retry(){startQuiz(currentTheme)}
+function goHome(){showScreen("home")}
+</script>
+</body>
+</html>

@@ -9,7 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Noto+Sans+Arabic:wght@400;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
         *{margin:0;padding:0;box-sizing:border-box}
-        :root{--fond:#1a1612;--or:#e0c85a;--or-dim:#a08830;--vert:#5ac878;--rouge:#d94f4f;--blanc:#f5f1e8;--gris:#8a8278}
+        :root{--fond:#2e2820;--fond-card:#3a332a;--or:#e0c85a;--or-dim:#a08830;--vert:#5ac878;--rouge:#d94f4f;--blanc:#f5f1e8;--gris:#8a8278}
         body{background:var(--fond);color:var(--blanc);font-family:'Space Mono',monospace;overflow:hidden;height:100vh;width:100vw;touch-action:none;-webkit-user-select:none;user-select:none}
 
         #startScreen{position:fixed;inset:0;z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--fond);transition:opacity .6s}
@@ -31,7 +31,7 @@
 
         #gameCanvas{display:block;width:100vw;height:100vh}
 
-        #questionBar{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0.95);z-index:50;background:rgba(26,22,18,.82);backdrop-filter:blur(6px);border:1px solid rgba(224,200,90,.15);border-radius:8px;padding:.7rem 1rem;width:90%;max-width:380px;opacity:0;visibility:hidden;transition:all .4s}
+        #questionBar{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0.95);z-index:50;background:rgba(46,40,32,.88);backdrop-filter:blur(6px);border:1px solid rgba(224,200,90,.15);border-radius:8px;padding:.7rem 1rem;width:90%;max-width:380px;opacity:0;visibility:hidden;transition:all .4s}
         #questionBar.visible{opacity:1;visibility:visible;transform:translate(-50%,-50%) scale(1)}
         .qbar-top{display:flex;align-items:center;gap:.8rem;margin-bottom:.6rem;flex-wrap:wrap}
         .qbar-cat{font-size:.5rem;letter-spacing:.25em;color:var(--or-dim);text-transform:uppercase;white-space:nowrap}
@@ -49,18 +49,22 @@
         .feedback-flash.show{opacity:1;transform:translate(-50%,-60%)}
         .feedback-flash.correct{color:var(--vert)}.feedback-flash.wrong{color:var(--rouge)}
 
-        #gameOver{position:fixed;inset:0;z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(26,22,18,.95);opacity:0;visibility:hidden;transition:all .5s}
+        #gameOver{position:fixed;inset:0;z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(46,40,32,.95);opacity:0;visibility:hidden;transition:all .5s}
         #gameOver.visible{opacity:1;visibility:visible}
         .gameover-title{font-family:'Cormorant Garamond',serif;font-size:2.5rem;font-weight:300;color:var(--or);letter-spacing:.2em;margin-bottom:1.5rem}
         .gameover-stats{font-size:.75rem;color:var(--gris);letter-spacing:.15em;line-height:2.2;text-align:center;margin-bottom:2rem}
         .gameover-stats span{color:var(--or);font-weight:700}
         .back-link{margin-top:1.5rem;font-size:.65rem;color:var(--gris);text-decoration:none;letter-spacing:.15em;transition:color .3s}
         .back-link:hover{color:var(--or)}
+        .nav-back{position:fixed;top:1rem;left:1rem;z-index:20;font-family:'Cormorant Garamond',serif;font-size:.7rem;color:var(--gris);text-decoration:none;letter-spacing:.15em;opacity:.5;transition:all .3s}
+        .nav-back:hover{color:var(--or);opacity:1}
 
         @media(max-width:600px){.start-logo{font-size:2.5rem}.score{font-size:1.4rem}.qbar-text{font-size:.9rem}.qbar-btn{font-size:.65rem;padding:.5rem .6rem}}
     </style>
 </head>
 <body>
+
+<a href="apps.html" class="nav-back">← IAKAI</a>
 
 <div id="startScreen">
     <div class="start-logo">Brain Pong</div>
@@ -72,7 +76,7 @@
         <span class="ar">إلعب وأجب في نفس الوقت — تحدٍّ مزدوج</span>
     </div>
     <button class="start-btn" id="btnStart">JOUER</button>
-    <div class="start-controls">Clavier : ↑ ↓ + clic réponse<br>Mobile : glisse + touche la réponse</div>
+    <div class="start-controls">Clavier : ↑ ↓ + clic réponse<br>Mobile : glisse + touche la réponse<br><span style="color:var(--or-dim);margin-top:.5rem;display:inline-block">100 questions · Islam · Histoire · Sciences · Culture · Héritage</span></div>
 </div>
 
 <div id="hud">
@@ -104,73 +108,115 @@
 
 <script>
 const QUESTIONS=[
-// ISLAM (12)
+// ═══ ISLAM (20) ═══
 {cat:"Islam",q:"Combien y a-t-il de piliers en Islam ?",ar:"كم عدد أركان الإسلام؟",c:["3","5","7","4"],a:1},
 {cat:"Islam",q:"Quel est le premier pilier de l'Islam ?",ar:"ما هو الركن الأول في الإسلام؟",c:["La prière","La chahada","Le jeûne","Le pèlerinage"],a:1},
 {cat:"Islam",q:"Combien de prières obligatoires par jour ?",ar:"كم عدد الصلوات المفروضة في اليوم؟",c:["3","4","5","7"],a:2},
 {cat:"Islam",q:"Pendant quel mois les musulmans jeûnent-ils ?",ar:"في أي شهر يصوم المسلمون؟",c:["Chaabane","Ramadan","Mouharram","Rajab"],a:1},
 {cat:"Islam",q:"Quelle ville abrite la Kaaba ?",ar:"في أي مدينة توجد الكعبة؟",c:["Médine","Jérusalem","La Mecque","Damas"],a:2},
 {cat:"Islam",q:"Quel est le dernier prophète en Islam ?",ar:"من هو آخر الأنبياء في الإسلام؟",c:["Issa","Moussa","Ibrahim","Mohammed ﷺ"],a:3},
-{cat:"Islam",q:"Combien de jours dure le Ramadan ?",ar:"كم يوماً يستمر رمضان؟",c:["28 jours","29 ou 30 jours","31 jours","25 jours"],a:1},
-{cat:"Islam",q:"Quelle prière se fait à l'aube ?",ar:"أي صلاة تُؤدّى عند الفجر؟",c:["Dhuhr","Maghrib","Fajr","Isha"],a:2},
-{cat:"Islam",q:"Quel jour est particulièrement béni ?",ar:"أي يوم له بركة خاصة؟",c:["Lundi","Mercredi","Vendredi","Dimanche"],a:2},
-{cat:"Islam",q:"Le Hajj est le pèlerinage vers… ?",ar:"الحج هو الذهاب إلى…؟",c:["Médine","La Mecque","Jérusalem","Le Caire"],a:1},
-{cat:"Islam",q:"Quel prophète a construit la Kaaba ?",ar:"أي نبي بنى الكعبة؟",c:["Moussa","Mohammed ﷺ","Ibrahim","Nouh"],a:2},
+{cat:"Islam",q:"Quelle est la première sourate du Coran ?",ar:"ما هي أول سورة في القرآن؟",c:["Al-Baqara","Al-Fatiha","Al-Ikhlas","Al-Nas"],a:1},
+{cat:"Islam",q:"Combien de sourates contient le Coran ?",ar:"كم عدد سور القرآن؟",c:["100","114","120","99"],a:1},
+{cat:"Islam",q:"Quel est le premier mot révélé du Coran ?",ar:"ما أول كلمة نزلت من القرآن؟",c:["Bismillah","Iqra (Lis)","Alhamdulillah","Qul"],a:1},
+{cat:"Islam",q:"Par quel ange le Coran a-t-il été transmis ?",ar:"بواسطة أي ملاك نزل القرآن؟",c:["Mikail","Israfil","Jibrail","Azrail"],a:2},
+{cat:"Islam",q:"En quelle année est né le Prophète ﷺ ?",ar:"في أي عام وُلد النبي ﷺ؟",c:["550","570","590","610"],a:1},
+{cat:"Islam",q:"L'émigration vers Médine s'appelle… ?",ar:"ما اسم الهجرة إلى المدينة؟",c:["Le Hajj","La Hijra","La Omra","Le Jihad"],a:1},
 {cat:"Islam",q:"Qu'est-ce que la Zakat ?",ar:"ما هي الزكاة؟",c:["Une prière","L'aumône obligatoire","Un jeûne","Un pèlerinage"],a:1},
+{cat:"Islam",q:"Première bataille de l'Islam ?",ar:"أول معركة في الإسلام؟",c:["Uhud","Khandaq","Badr","Khaybar"],a:2},
+{cat:"Islam",q:"Premier muezzin de l'Islam ?",ar:"أول مؤذن في الإسلام؟",c:["Abu Bakr","Bilal","Omar","Ali"],a:1},
+{cat:"Islam",q:"Que signifie 'Al-Ihsan' ?",ar:"ماذا يعني الإحسان؟",c:["La prière","L'excellence","Le jeûne","La charité"],a:1},
+{cat:"Islam",q:"Que signifie 'As-Sabr' ?",ar:"ماذا يعني الصبر؟",c:["La gratitude","La patience","La générosité","Le courage"],a:1},
+{cat:"Islam",q:"Que signifie 'At-Tawba' ?",ar:"ماذا تعني التوبة؟",c:["Le voyage","La prière","Le repentir","La fête"],a:2},
+{cat:"Islam",q:"Chercher le savoir est… ?",ar:"طلب العلم…؟",c:["Interdit","Optionnel","Une obligation","Réservé aux savants"],a:2},
+{cat:"Islam",q:"Dans quelle grotte le Coran a commencé à être révélé ?",ar:"في أي غار بدأ نزول القرآن؟",c:["Thawr","Hira","Kahf","Uhud"],a:1},
 
-// CORAN (12)
-{cat:"Coran",q:"Quelle est la première sourate du Coran ?",ar:"ما هي أول سورة في القرآن؟",c:["Al-Baqara","Al-Fatiha","Al-Ikhlas","Al-Nas"],a:1},
-{cat:"Coran",q:"Combien de sourates contient le Coran ?",ar:"كم عدد سور القرآن؟",c:["100","114","120","99"],a:1},
-{cat:"Coran",q:"Quelle sourate est le cœur du Coran ?",ar:"ما السورة التي تُسمّى قلب القرآن؟",c:["Al-Baqara","Yasin","Al-Kahf","Ar-Rahman"],a:1},
-{cat:"Coran",q:"Quel mot signifie 'Au nom de Dieu' ?",ar:"ما الكلمة التي تعني بسم الله؟",c:["Alhamdulillah","Bismillah","SubhanAllah","Allahu Akbar"],a:1},
-{cat:"Coran",q:"Quelle est la plus longue sourate ?",ar:"ما أطول سورة في القرآن؟",c:["Al-Imran","An-Nisa","Al-Baqara","Al-Maida"],a:2},
-{cat:"Coran",q:"Quelle est la plus courte sourate ?",ar:"ما أقصر سورة في القرآن؟",c:["Al-Ikhlas","Al-Kawthar","Al-Asr","Al-Fil"],a:1},
-{cat:"Coran",q:"Dans quelle grotte le Coran a commencé à être révélé ?",ar:"في أي غار بدأ نزول القرآن؟",c:["Thawr","Hira","Kahf","Uhud"],a:1},
-{cat:"Coran",q:"Quel est le premier mot révélé ?",ar:"ما أول كلمة نزلت من القرآن؟",c:["Bismillah","Iqra (Lis)","Alhamdulillah","Qul"],a:1},
-{cat:"Coran",q:"Le Coran a été révélé en combien d'années ?",ar:"كم سنة استغرق نزول القرآن؟",c:["10 ans","15 ans","23 ans","30 ans"],a:2},
-{cat:"Coran",q:"Par quel ange le Coran a-t-il été transmis ?",ar:"بواسطة أي ملاك نزل القرآن؟",c:["Mikail","Israfil","Jibrail","Azrail"],a:2},
-{cat:"Coran",q:"Quelle sourate mentionne le voyage nocturne ?",ar:"أي سورة تذكر الإسراء؟",c:["Al-Kahf","Al-Isra","Al-Anfal","Maryam"],a:1},
-{cat:"Coran",q:"Sourate Al-Ikhlas parle de… ?",ar:"عن ماذا تتحدث سورة الإخلاص؟",c:["Les prophètes","L'unicité de Dieu","Le paradis","Le jugement"],a:1},
+// ═══ HISTOIRE (20) ═══
+{cat:"Histoire",q:"Quelle dynastie a fondé Bagdad ?",ar:"أي سلالة أسست بغداد؟",c:["Les Omeyyades","Les Abbassides","Les Fatimides","Les Ottomans"],a:1},
+{cat:"Histoire",q:"En quelle année Bagdad a-t-elle été fondée ?",ar:"في أي عام تأسست بغداد؟",c:["632","711","762","1258"],a:2},
+{cat:"Histoire",q:"Qui a conquis l'Espagne en 711 ?",ar:"من فتح الأندلس عام 711؟",c:["Saladin","Tariq ibn Ziyad","Harun al-Rachid","Al-Mansur"],a:1},
+{cat:"Histoire",q:"Quel détroit porte le nom du conquérant de l'Andalousie ?",ar:"أي مضيق يحمل اسم فاتح الأندلس؟",c:["Bosphore","Ormuz","Gibraltar","Suez"],a:2},
+{cat:"Histoire",q:"Quelle ville était la capitale des Omeyyades ?",ar:"ما عاصمة الأمويين؟",c:["Bagdad","Damas","Cordoue","Le Caire"],a:1},
+{cat:"Histoire",q:"Qui a repris Jérusalem aux Croisés en 1187 ?",ar:"من استعاد القدس من الصليبيين عام 1187؟",c:["Al-Mansur","Baybars","Saladin","Mehmed II"],a:2},
+{cat:"Histoire",q:"Quelle bataille marque la fin des Abbassides de Bagdad ?",ar:"أي معركة أنهت العباسيين في بغداد؟",c:["Poitiers","Chute de Bagdad 1258","Aïn Jalout","Hattin"],a:1},
+{cat:"Histoire",q:"Qui a stoppé les Mongols à Aïn Jalout en 1260 ?",ar:"من أوقف المغول في عين جالوت؟",c:["Saladin","Les Ottomans","Les Mamelouks","Les Almohades"],a:2},
+{cat:"Histoire",q:"Quel sultan a conquis Constantinople en 1453 ?",ar:"أي سلطان فتح القسطنطينية عام 1453؟",c:["Soliman","Bayezid","Mehmed II","Selim Ier"],a:2},
+{cat:"Histoire",q:"Comment s'appelle l'Espagne musulmane ?",ar:"ما اسم إسبانيا الإسلامية؟",c:["Al-Sham","Al-Andalus","Al-Maghrib","Al-Iraq"],a:1},
+{cat:"Histoire",q:"Quel monument est le symbole de Cordoue islamique ?",ar:"ما رمز قرطبة الإسلامية؟",c:["L'Alhambra","La Giralda","La Grande Mosquée","La Koutoubia"],a:2},
+{cat:"Histoire",q:"Quelle dynastie a régné sur l'Égypte et fondé Le Caire ?",ar:"أي سلالة حكمت مصر وأسست القاهرة؟",c:["Les Abbassides","Les Omeyyades","Les Fatimides","Les Ayyoubides"],a:2},
+{cat:"Histoire",q:"Qui était le calife de l'âge d'or abbasside ?",ar:"من كان خليفة العصر الذهبي العباسي؟",c:["Al-Mamun","Harun al-Rachid","Al-Mutawakkil","Al-Mansur"],a:1},
+{cat:"Histoire",q:"Quelle université est la plus ancienne du monde encore active ?",ar:"ما أقدم جامعة في العالم لا تزال نشطة؟",c:["Al-Azhar","Oxford","Al-Qarawiyyin","Bologne"],a:2},
+{cat:"Histoire",q:"Qui a fondé l'université Al-Qarawiyyin à Fès ?",ar:"من أسس جامعة القرويين في فاس؟",c:["Harun al-Rachid","Fatima al-Fihri","Saladin","Al-Mamun"],a:1},
+{cat:"Histoire",q:"En quelle année la chute de Grenade ?",ar:"في أي عام سقطت غرناطة؟",c:["1453","1492","1517","1389"],a:1},
+{cat:"Histoire",q:"Quel empire a dominé le monde musulman du XVIe au XXe siècle ?",ar:"أي إمبراطورية هيمنت على العالم الإسلامي من القرن 16 إلى 20؟",c:["Les Safavides","Les Moghols","Les Ottomans","Les Mamelouks"],a:2},
+{cat:"Histoire",q:"Quel calife abbasside a créé la Maison de la Sagesse ?",ar:"أي خليفة عباسي أنشأ بيت الحكمة؟",c:["Harun al-Rachid","Al-Mamun","Al-Mansur","Al-Mutasim"],a:1},
+{cat:"Histoire",q:"Quelle ville était le joyau de l'Andalousie au Xe siècle ?",ar:"أي مدينة كانت جوهرة الأندلس في القرن العاشر؟",c:["Grenade","Séville","Cordoue","Tolède"],a:2},
+{cat:"Histoire",q:"Quel pacte garantissait la liberté de culte à Jérusalem (Omar) ?",ar:"أي عهد ضمن حرية العبادة في القدس؟",c:["Traité de Hudaybiya","Pacte d'Omar","Charte de Médine","Traité de Cordoue"],a:1},
 
-// SIRA (16)
-{cat:"Sira",q:"En quelle année est né le Prophète ﷺ ?",ar:"في أي عام وُلد النبي ﷺ؟",c:["550","570","590","610"],a:1},
-{cat:"Sira",q:"Comment s'appelait la mère du Prophète ﷺ ?",ar:"ما اسم أم النبي ﷺ؟",c:["Khadija","Fatima","Amina","Aïcha"],a:2},
-{cat:"Sira",q:"Qui a élevé le Prophète ﷺ après ses parents ?",ar:"من ربّى النبي ﷺ بعد والديه؟",c:["Abu Bakr","Abu Talib","Omar","Ali"],a:1},
-{cat:"Sira",q:"Qui était la première épouse du Prophète ﷺ ?",ar:"من أول زوجة للنبي ﷺ؟",c:["Aïcha","Hafsa","Khadija","Oum Salama"],a:2},
-{cat:"Sira",q:"Premier homme à embrasser l'Islam ?",ar:"أول رجل أسلم؟",c:["Omar","Abu Bakr","Ali","Othman"],a:1},
-{cat:"Sira",q:"Premier enfant à embrasser l'Islam ?",ar:"أول طفل أسلم؟",c:["Omar","Abu Bakr","Ali","Zayd"],a:2},
-{cat:"Sira",q:"L'émigration vers Médine s'appelle… ?",ar:"ما اسم الهجرة إلى المدينة؟",c:["Le Hajj","La Hijra","La Omra","Le Jihad"],a:1},
-{cat:"Sira",q:"En quelle année la Hijra ?",ar:"في أي سنة كانت الهجرة؟",c:["610","620","622","630"],a:2},
-{cat:"Sira",q:"Première bataille de l'Islam ?",ar:"أول معركة في الإسلام؟",c:["Uhud","Khandaq","Badr","Khaybar"],a:2},
-{cat:"Sira",q:"Métier du Prophète ﷺ avant la révélation ?",ar:"مهنة النبي ﷺ قبل الوحي؟",c:["Forgeron","Berger et commerçant","Médecin","Enseignant"],a:1},
-{cat:"Sira",q:"Compagnon dans la grotte de Thawr ?",ar:"رفيق النبي ﷺ في غار ثور؟",c:["Omar","Ali","Abu Bakr","Othman"],a:2},
-{cat:"Sira",q:"Surnom du Prophète ﷺ avant l'Islam ?",ar:"لقب النبي ﷺ قبل الإسلام؟",c:["Le Brave","Le Savant","Al-Amine","Le Sage"],a:2},
-{cat:"Sira",q:"Année de la conquête de La Mecque ?",ar:"سنة فتح مكة؟",c:["625","628","630","632"],a:2},
-{cat:"Sira",q:"Premier muezzin de l'Islam ?",ar:"أول مؤذن في الإسلام؟",c:["Abu Bakr","Bilal","Omar","Ali"],a:1},
-{cat:"Sira",q:"Où est enterré le Prophète ﷺ ?",ar:"أين دُفن النبي ﷺ؟",c:["La Mecque","Jérusalem","Médine","Taif"],a:2},
-{cat:"Sira",q:"Quel pacte signé avec les Mecquois ?",ar:"ما العهد مع أهل مكة؟",c:["Pacte de Médine","Traité de Hudaybiya","Pacte de Aqaba","Traité de Taif"],a:1},
+// ═══ SCIENCES (20) ═══
+{cat:"Sciences",q:"Qui est le père de l'algèbre ?",ar:"من هو أبو الجبر؟",c:["Ibn Sina","Al-Khwarizmi","Al-Biruni","Ibn al-Haytham"],a:1},
+{cat:"Sciences",q:"D'où vient le mot 'algorithme' ?",ar:"من أين جاءت كلمة خوارزمية؟",c:["Du grec","Du latin","D'Al-Khwarizmi","Du persan"],a:2},
+{cat:"Sciences",q:"Qui a écrit le Canon de la médecine ?",ar:"من كتب القانون في الطب؟",c:["Al-Razi","Al-Khwarizmi","Ibn Sina","Ibn Khaldun"],a:2},
+{cat:"Sciences",q:"Ibn al-Haytham est le père de… ?",ar:"ابن الهيثم هو أبو…؟",c:["L'algèbre","L'optique","La chirurgie","La chimie"],a:1},
+{cat:"Sciences",q:"Quel savant a écrit le Kitab al-Manazir (Livre de l'optique) ?",ar:"من كتب كتاب المناظر؟",c:["Al-Biruni","Ibn Sina","Ibn al-Haytham","Al-Kindi"],a:2},
+{cat:"Sciences",q:"Al-Razi (Rhazès) était spécialiste de… ?",ar:"الرازي كان متخصصاً في…؟",c:["L'astronomie","La médecine et la chimie","L'optique","Les mathématiques"],a:1},
+{cat:"Sciences",q:"Qui a inventé la méthode de distillation en chimie ?",ar:"من اخترع طريقة التقطير في الكيمياء؟",c:["Al-Khwarizmi","Ibn Sina","Jabir ibn Hayyan","Al-Biruni"],a:2},
+{cat:"Sciences",q:"D'où vient le mot 'chimie' (alchemy) ?",ar:"من أين جاءت كلمة الكيمياء؟",c:["Du grec","De l'arabe al-kimiya","Du latin","Du chinois"],a:1},
+{cat:"Sciences",q:"Qui a calculé la circonférence de la Terre au XIe siècle ?",ar:"من حسب محيط الأرض في القرن الحادي عشر؟",c:["Al-Khwarizmi","Ibn Sina","Al-Biruni","Al-Idrisi"],a:2},
+{cat:"Sciences",q:"Al-Jazari est connu pour ses travaux en… ?",ar:"الجزري معروف بأعماله في…؟",c:["Médecine","Ingénierie et automates","Optique","Philosophie"],a:1},
+{cat:"Sciences",q:"Qui a réalisé la première carte du monde détaillée ?",ar:"من رسم أول خريطة مفصلة للعالم؟",c:["Al-Biruni","Ibn Battuta","Al-Idrisi","Al-Masudi"],a:2},
+{cat:"Sciences",q:"Quel savant a distingué la variole de la rougeole ?",ar:"أي عالم ميّز بين الجدري والحصبة؟",c:["Ibn Sina","Al-Razi","Al-Zahrawi","Ibn al-Nafis"],a:1},
+{cat:"Sciences",q:"Qui a décrit la circulation pulmonaire du sang ?",ar:"من وصف الدورة الدموية الرئوية؟",c:["Ibn Sina","Al-Razi","Ibn al-Nafis","Al-Zahrawi"],a:2},
+{cat:"Sciences",q:"Al-Zahrawi (Abulcasis) est le père de… ?",ar:"الزهراوي هو أبو…؟",c:["L'optique","La chirurgie","L'algèbre","L'astronomie"],a:1},
+{cat:"Sciences",q:"Quel ouvrage d'Al-Zahrawi a influencé la chirurgie européenne ?",ar:"أي كتاب للزهراوي أثّر في الجراحة الأوروبية؟",c:["Le Canon","Al-Tasrif","Al-Manazir","Al-Jabr"],a:1},
+{cat:"Sciences",q:"Les chiffres que nous utilisons sont appelés… ?",ar:"الأرقام التي نستخدمها تُسمّى…؟",c:["Romains","Grecs","Arabo-indiens","Babyloniens"],a:2},
+{cat:"Sciences",q:"Qui a introduit le concept du zéro en mathématiques arabes ?",ar:"من أدخل مفهوم الصفر في الرياضيات العربية؟",c:["Ibn al-Haytham","Al-Khwarizmi","Al-Kindi","Al-Biruni"],a:1},
+{cat:"Sciences",q:"La Maison de la Sagesse à Bagdad était… ?",ar:"بيت الحكمة في بغداد كان…؟",c:["Un palais","Un centre de traduction et de recherche","Une mosquée","Un hôpital"],a:1},
+{cat:"Sciences",q:"Al-Kindi est considéré comme le père de… ?",ar:"الكندي يُعتبر أبو…؟",c:["La chirurgie","La philosophie islamique","L'optique","La géographie"],a:1},
+{cat:"Sciences",q:"Quel astronome a corrigé les tables de Ptolémée ?",ar:"أي فلكي صحّح جداول بطليموس؟",c:["Al-Khwarizmi","Al-Battani","Ibn Sina","Al-Jazari"],a:1},
 
-// VALEURS (20)
-{cat:"Valeurs",q:"Que signifie 'As-Sabr' ?",ar:"ماذا يعني الصبر؟",c:["La gratitude","La patience","La générosité","Le courage"],a:1},
-{cat:"Valeurs",q:"Que signifie 'Ash-Shukr' ?",ar:"ماذا يعني الشكر؟",c:["Le pardon","La patience","La gratitude","La sagesse"],a:2},
-{cat:"Valeurs",q:"Que signifie 'Ar-Rahma' ?",ar:"ماذا تعني الرحمة؟",c:["La justice","La compassion","La force","La sincérité"],a:1},
-{cat:"Valeurs",q:"Que signifie 'Al-Amana' ?",ar:"ماذا تعني الأمانة؟",c:["L'honnêteté","La paix","La prière","La loyauté"],a:0},
-{cat:"Valeurs",q:"Le sourire est considéré comme… ?",ar:"الابتسامة تُعتبر…؟",c:["Une obligation","Une sadaqa","Un péché","Une sunna uniquement"],a:1},
-{cat:"Valeurs",q:"Que signifie 'At-Tawadu' ?",ar:"ماذا يعني التواضع؟",c:["L'orgueil","L'humilité","Le repentir","La piété"],a:1},
-{cat:"Valeurs",q:"Que signifie 'Al-Qanaa' ?",ar:"ماذا تعني القناعة؟",c:["L'ambition","Le contentement","La richesse","La tristesse"],a:1},
-{cat:"Valeurs",q:"Le voisin a un droit, lequel ?",ar:"للجار حقّ، ما هو؟",c:["L'ignorer","Le respecter","L'éviter","Le surveiller"],a:1},
-{cat:"Valeurs",q:"Que signifie 'Tawakkul' ?",ar:"ماذا يعني التوكل؟",c:["La peur","S'en remettre à Dieu","La paresse","La prudence"],a:1},
-{cat:"Valeurs",q:"Le meilleur jihad selon le Prophète ﷺ ?",ar:"أفضل الجهاد عند النبي ﷺ؟",c:["Le combat","Contre soi-même","Le voyage","Le silence"],a:1},
-{cat:"Valeurs",q:"Que dit-on avant de manger ?",ar:"ماذا نقول قبل الأكل؟",c:["Alhamdulillah","Bismillah","Astaghfirullah","SubhanAllah"],a:1},
-{cat:"Valeurs",q:"Que dit-on après avoir mangé ?",ar:"ماذا نقول بعد الأكل؟",c:["Bismillah","Allahu Akbar","Alhamdulillah","InchAllah"],a:2},
-{cat:"Valeurs",q:"Comment traiter ses parents ?",ar:"كيف نعامل الوالدين؟",c:["Avec indifférence","Avec respect et bonté","Avec distance","Avec autorité"],a:1},
-{cat:"Valeurs",q:"L'eau : quel geste recommandé ?",ar:"الماء: ما الفعل المستحب؟",c:["La gaspiller","Ne pas partager","Économiser l'eau","La vendre cher"],a:2},
-{cat:"Valeurs",q:"Que signifie 'Al-Ihsan' ?",ar:"ماذا يعني الإحسان؟",c:["La prière","L'excellence","Le jeûne","La charité"],a:1},
-{cat:"Valeurs",q:"Chercher le savoir est… ?",ar:"طلب العلم…؟",c:["Interdit","Optionnel","Une obligation","Réservé aux savants"],a:2},
-{cat:"Valeurs",q:"Que signifie 'Al-Adl' ?",ar:"ماذا يعني العدل؟",c:["La force","La justice","La richesse","La beauté"],a:1},
-{cat:"Valeurs",q:"Que signifie 'As-Sidq' ?",ar:"ماذا يعني الصدق؟",c:["La véracité","La ruse","Le silence","La fierté"],a:0},
-{cat:"Valeurs",q:"Que signifie 'Al-Hilm' ?",ar:"ماذا يعني الحلم؟",c:["La colère","La douceur / clémence","L'oubli","La fatigue"],a:1},
-{cat:"Valeurs",q:"Que signifie 'At-Tawba' ?",ar:"ماذا تعني التوبة؟",c:["Le voyage","La prière","Le repentir","La fête"],a:2},
+// ═══ CULTURE (20) ═══
+{cat:"Culture",q:"Quel palais de Grenade est un chef-d'œuvre de l'art islamique ?",ar:"أي قصر في غرناطة هو تحفة الفن الإسلامي؟",c:["Le Taj Mahal","L'Alhambra","Topkapi","La Koutoubia"],a:1},
+{cat:"Culture",q:"Quel art décoratif est typique de l'Islam (motifs géométriques) ?",ar:"أي فن زخرفي يميّز الإسلام؟",c:["La fresque","L'arabesque","La mosaïque romaine","Le vitrail"],a:1},
+{cat:"Culture",q:"Les Mille et Une Nuits se passent principalement à… ?",ar:"ألف ليلة وليلة تدور أحداثها في…؟",c:["Le Caire","Damas","Bagdad","Cordoue"],a:2},
+{cat:"Culture",q:"Qui est le plus grand voyageur du monde médiéval musulman ?",ar:"من هو أعظم رحّالة في العالم الإسلامي؟",c:["Al-Idrisi","Marco Polo","Ibn Battuta","Al-Masudi"],a:2},
+{cat:"Culture",q:"Combien de kilomètres Ibn Battuta a-t-il parcourus ?",ar:"كم كيلومتراً قطع ابن بطوطة؟",c:["30 000 km","75 000 km","120 000 km","10 000 km"],a:2},
+{cat:"Culture",q:"Quel type d'écriture est un art majeur en Islam ?",ar:"أي نوع من الكتابة يُعدّ فناً كبيراً في الإسلام؟",c:["L'enluminure","La calligraphie","La typographie","La gravure"],a:1},
+{cat:"Culture",q:"Quel instrument est à l'origine du luth européen ?",ar:"أي آلة هي أصل العود الأوروبي؟",c:["La guitare","Le oud","Le sitar","La harpe"],a:1},
+{cat:"Culture",q:"D'où vient le mot 'guitare' ?",ar:"من أين جاءت كلمة guitar؟",c:["Du latin","De l'arabe qithara","Du grec","Du persan"],a:1},
+{cat:"Culture",q:"Le Taj Mahal a été construit par quel empire ?",ar:"من بنى تاج محل؟",c:["Les Ottomans","Les Safavides","Les Moghols","Les Abbassides"],a:2},
+{cat:"Culture",q:"Quel poète persan a écrit le Masnavi ?",ar:"أي شاعر فارسي كتب المثنوي؟",c:["Hafez","Omar Khayyam","Rumi","Saadi"],a:2},
+{cat:"Culture",q:"Ibn Khaldun est considéré comme le père de… ?",ar:"ابن خلدون يُعتبر أبو…؟",c:["La médecine","La sociologie","L'astronomie","La chimie"],a:1},
+{cat:"Culture",q:"Quel ouvrage d'Ibn Khaldun est fondateur ?",ar:"أي كتاب لابن خلدون يُعدّ مؤسّساً؟",c:["Le Canon","La Muqaddima","Al-Jabr","Le Livre des routes"],a:1},
+{cat:"Culture",q:"La mosquée de Samarra est célèbre pour son… ?",ar:"مسجد سامراء مشهور بـ…؟",c:["Dôme doré","Minaret en spirale","Jardin intérieur","Bassin sacré"],a:1},
+{cat:"Culture",q:"Quel tissu de luxe tire son nom de Damas ?",ar:"أي قماش فاخر يحمل اسم دمشق؟",c:["La soie","Le damassé","Le velours","Le lin"],a:1},
+{cat:"Culture",q:"Le café a été popularisé à partir de… ?",ar:"القهوة انتشرت انطلاقاً من…؟",c:["La Chine","L'Inde","Le Yémen","L'Éthiopie"],a:2},
+{cat:"Culture",q:"Quel mot arabe a donné 'magazine' en français ?",ar:"أي كلمة عربية أعطت magazine بالفرنسية؟",c:["Makhzan","Majlis","Madrasa","Maktaba"],a:0},
+{cat:"Culture",q:"Quelle ville marocaine est connue pour sa médina bleue ?",ar:"أي مدينة مغربية معروفة بمدينتها الزرقاء؟",c:["Fès","Marrakech","Chefchaouen","Tanger"],a:2},
+{cat:"Culture",q:"L'art des zellige (mosaïques géométriques) vient de… ?",ar:"فن الزليج جاء من…؟",c:["La Turquie","L'Égypte","Le Maroc / Al-Andalus","L'Iran"],a:2},
+{cat:"Culture",q:"Quel grand historien arabe a voyagé en Afrique au XIVe siècle ?",ar:"أي مؤرخ عربي سافر إلى أفريقيا في القرن 14؟",c:["Al-Masudi","Ibn Khaldun","Ibn Battuta","Al-Idrisi"],a:2},
+{cat:"Culture",q:"Omar Khayyam est célèbre pour ses… ?",ar:"عمر الخيام مشهور بـ…؟",c:["Traités médicaux","Quatrains (Rubaiyat)","Cartes géographiques","Automates"],a:1},
+
+// ═══ HÉRITAGE (20) ═══
+{cat:"Héritage",q:"Le mot 'algèbre' vient de l'arabe… ?",ar:"كلمة algebra جاءت من العربية…؟",c:["Al-ilm","Al-jabr","Al-kimiya","Al-falsafa"],a:1},
+{cat:"Héritage",q:"Le mot 'chiffre' vient de l'arabe… ?",ar:"كلمة chiffre جاءت من العربية…؟",c:["Shifr","Hisab","Adad","Raqm"],a:0},
+{cat:"Héritage",q:"D'où vient le mot français 'zéro' ?",ar:"من أين جاءت كلمة zéro الفرنسية؟",c:["Du latin","De l'arabe sifr","Du grec","Du sanskrit"],a:1},
+{cat:"Héritage",q:"Le mot 'azimut' utilisé en navigation vient de… ?",ar:"كلمة azimut المستخدمة في الملاحة جاءت من…؟",c:["Du grec","De l'arabe as-sumut","Du latin","Du persan"],a:1},
+{cat:"Héritage",q:"Averroès (Ibn Rushd) a influencé quel penseur européen ?",ar:"ابن رشد أثّر في أي مفكر أوروبي؟",c:["Descartes","Thomas d'Aquin","Galilée","Newton"],a:1},
+{cat:"Héritage",q:"Quel savant musulman a influencé la Renaissance européenne en optique ?",ar:"أي عالم مسلم أثّر في عصر النهضة الأوروبية في البصريات؟",c:["Al-Razi","Al-Khwarizmi","Ibn al-Haytham","Al-Biruni"],a:2},
+{cat:"Héritage",q:"Les traductions de Tolède ont transmis à l'Europe… ?",ar:"ترجمات طليطلة نقلت إلى أوروبا…؟",c:["L'art culinaire","Le savoir grec via l'arabe","La musique","L'architecture"],a:1},
+{cat:"Héritage",q:"Le mot 'amiral' vient de l'arabe… ?",ar:"كلمة amiral جاءت من العربية…؟",c:["Amir al-bahr","Al-qaid","Sultan","Wazir"],a:0},
+{cat:"Héritage",q:"Le mot 'coton' vient de l'arabe… ?",ar:"كلمة coton جاءت من العربية…؟",c:["Katifa","Qutn","Harir","Suf"],a:1},
+{cat:"Héritage",q:"L'astrolabe perfectionné par les Arabes servait à… ?",ar:"الإسطرلاب الذي طوّره العرب كان يُستخدم لـ…؟",c:["Peser l'or","Mesurer les étoiles","Naviguer en mer","Dessiner des cartes"],a:1},
+{cat:"Héritage",q:"Quel système d'irrigation arabe est encore utilisé en Espagne ?",ar:"أي نظام ري عربي لا يزال مستخدماً في إسبانيا؟",c:["Les aqueducs","Les acequias","Les barrages","Les puits artésiens"],a:1},
+{cat:"Héritage",q:"Le mot 'abricot' vient de l'arabe… ?",ar:"كلمة abricot جاءت من العربية…؟",c:["Al-barquq","Al-tuffah","Al-burtuqal","Al-lawz"],a:0},
+{cat:"Héritage",q:"Quel concept mathématique essentiel les Arabes ont transmis ?",ar:"أي مفهوم رياضي أساسي نقله العرب؟",c:["La géométrie","Le zéro et le système décimal","Le théorème de Pythagore","Les fractions"],a:1},
+{cat:"Héritage",q:"L'hôpital moderne s'inspire des bimaristans de… ?",ar:"المستشفى الحديث مستوحى من البيمارستانات في…؟",c:["La Grèce","Rome","Le monde islamique","La Chine"],a:2},
+{cat:"Héritage",q:"Le mot 'safari' vient de l'arabe… ?",ar:"كلمة safari جاءت من العربية…؟",c:["Safar (voyage)","Sahra (désert)","Sayf (épée)","Sabr (patience)"],a:0},
+{cat:"Héritage",q:"Quel jeu populaire a été transmis à l'Europe par les Arabes ?",ar:"أي لعبة شعبية نقلها العرب إلى أوروبا؟",c:["Les dominos","Les échecs","Les cartes","Les dés"],a:1},
+{cat:"Héritage",q:"Le mot 'tarif' vient de l'arabe… ?",ar:"كلمة tarif جاءت من العربية…؟",c:["Tarif (notification)","Tarik (chemin)","Tajir (marchand)","Tawzif (emploi)"],a:0},
+{cat:"Héritage",q:"D'où vient le mot 'arsenal' ?",ar:"من أين جاءت كلمة arsenal؟",c:["Du latin","De l'arabe dar al-sinaa","Du français","De l'italien"],a:1},
+{cat:"Héritage",q:"Le papier est arrivé en Europe via… ?",ar:"الورق وصل إلى أوروبا عبر…؟",c:["La route de la soie directement","Le monde islamique","Les Vikings","Byzance"],a:1},
+{cat:"Héritage",q:"Le mot 'hasard' vient de l'arabe… ?",ar:"كلمة hasard جاءت من العربية…؟",c:["Hazar","Az-zahr (le dé)","Hazz (chance)","Hasr (calcul)"],a:1},
 ];
 
 const canvas=document.getElementById('gameCanvas'),ctx=canvas.getContext('2d');
