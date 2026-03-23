@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Orientation — IAKAI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{
+            --fond:#2e2820;
+            --fond-card:#3a332a;
+            --ocre-sombre:#6b5a3e;
+            --ocre-dore:#c4a035;
+            --or:#e0c85a;
+            --blanc:#f5f1e8;
+            --gris:#bfb9ae;
+            --gris-moyen:#8a8278;
+            --vert:#5ac878;
+            --rouge:#d94f4f;
+        }
+        html{scroll-behavior:smooth}
+        body{
+            min-height:100vh;
+            background:var(--fond);
+            color:var(--blanc);
+            font-family:'Cormorant Garamond',Georgia,serif;
+            overflow-x:hidden;
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+        }
+
+        /* ═══ Rainbow overlay ═══ */
+        .rainbow-overlay{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+        .rainbow-overlay::before{
+            content:'';position:absolute;width:200%;height:200%;top:-50%;left:-50%;
+            background:
+                radial-gradient(ellipse at 10% 10%,rgba(255,180,100,.14) 0%,transparent 45%),
+                radial-gradient(ellipse at 80% 15%,rgba(180,140,200,.12) 0%,transparent 40%),
+                radial-gradient(ellipse at 50% 60%,rgba(100,180,160,.10) 0%,transparent 45%),
+                radial-gradient(ellipse at 20% 80%,rgba(220,170,80,.13) 0%,transparent 40%),
+                radial-gradient(ellipse at 90% 70%,rgba(160,120,180,.10) 0%,transparent 45%);
+            animation:rainbow-drift 20s ease-in-out infinite;
+        }
+        .rainbow-overlay::after{
+            content:'';position:absolute;width:150%;height:150%;top:-25%;left:-25%;
+            background:
+                radial-gradient(ellipse at 65% 30%,rgba(120,180,200,.10) 0%,transparent 50%),
+                radial-gradient(ellipse at 30% 55%,rgba(255,160,120,.12) 0%,transparent 45%),
+                radial-gradient(ellipse at 75% 75%,rgba(160,200,140,.09) 0%,transparent 40%);
+            animation:rainbow-shimmer 15s ease-in-out infinite reverse;
+        }
+        @keyframes rainbow-drift{
+            0%{transform:translate(0,0) rotate(0deg)}
+            33%{transform:translate(5%,8%) rotate(1deg)}
+            66%{transform:translate(10%,15%) rotate(2deg)}
+            100%{transform:translate(0,0) rotate(0deg)}
+        }
+        @keyframes rainbow-shimmer{
+            0%{transform:translate(0,0) scale(1);opacity:.5}
+            50%{transform:translate(3%,5%) scale(1.05);opacity:.8}
+            100%{transform:translate(0,0) scale(1);opacity:.5}
+        }
+
+        /* ═══ Container ═══ */
+        .container{
+            position:relative;z-index:1;
+            width:100%;max-width:640px;
+            padding:2.5rem 1.5rem 3rem;
+        }
+
+        /* ═══ Header ═══ */
+        .app-header{text-align:center;margin-bottom:2.5rem}
+        .app-logo{
+            font-size:1.8rem;font-weight:300;letter-spacing:.4em;
+            color:var(--or);text-transform:uppercase;margin-bottom:.2rem;
+        }
+        .app-logo a{color:var(--or);text-decoration:none;transition:opacity .3s}
+        .app-logo a:hover{opacity:.7}
+        .app-tagline{
+            font-size:.85rem;letter-spacing:.2em;
+            color:var(--gris-moyen);font-style:italic;font-weight:300;
+        }
+
+        /* ═══ Intro ═══ */
+        .intro{text-align:center;margin-bottom:2rem}
+        .intro-emoji{font-size:2.8rem;display:block;margin-bottom:.8rem}
+        .intro h1{
+            font-size:2rem;font-weight:300;letter-spacing:.08em;
+            color:var(--blanc);margin-bottom:.6rem;line-height:1.3;
+        }
+        .intro h1 em{font-style:italic;color:var(--or)}
+        .intro p{
+            font-size:1.05rem;color:var(--gris);line-height:1.7;
+            max-width:480px;margin:0 auto;font-weight:300;
+        }
+        .time-badge{
+            display:inline-block;margin-top:1rem;
+            background:rgba(224,200,90,.08);
+            border:1px solid rgba(224,200,90,.15);
+            border-radius:4px;padding:.35rem 1rem;
+            font-size:.8rem;color:var(--ocre-dore);letter-spacing:.1em;
+        }
+        .intro-btn{
+            display:inline-block;margin-top:1.8rem;
+            padding:.75rem 2.2rem;background:transparent;
+            border:1px solid var(--or);color:var(--or);
+            font-family:'Cormorant Garamond',Georgia,serif;
+            font-size:1rem;letter-spacing:.2em;text-transform:uppercase;
+            cursor:pointer;border-radius:4px;transition:all .3s;
+        }
+        .intro-btn:hover{background:var(--or);color:var(--fond)}
+
+        /* ═══ Progress ═══ */
+        .progress{margin-bottom:2rem;display:none}
+        .progress.visible{display:block}
+        .progress-steps{display:flex;justify-content:space-between;margin-bottom:.5rem}
+        .progress-label{
+            font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;
+            color:var(--gris-moyen);text-align:center;flex:1;transition:color .4s;
+        }
+        .progress-label.active{color:var(--or)}
+        .progress-label.done{color:var(--vert)}
+        .progress-bar{height:2px;background:rgba(224,200,90,.1);border-radius:2px;overflow:hidden}
+        .progress-fill{height:100%;background:var(--or);border-radius:2px;transition:width .5s ease;width:20%}
+
+        /* ═══ Steps ═══ */
+        .step{display:none;animation:fadeIn .4s ease}
+        .step.visible{display:block}
+        @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+        .step-number{font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ocre-dore);margin-bottom:.3rem}
+        .step-title{font-size:1.6rem;font-weight:300;color:var(--blanc);margin-bottom:.5rem;letter-spacing:.05em}
+        .step-desc{font-size:.95rem;color:var(--gris);line-height:1.6;font-weight:300;margin-bottom:1.8rem;font-style:italic}
+
+        /* ═══ Fields ═══ */
+        .field{margin-bottom:1.4rem}
+        .field-label{display:block;font-size:.9rem;font-weight:400;color:var(--blanc);margin-bottom:.5rem;letter-spacing:.03em}
+        .field-label .req{color:var(--ocre-dore);margin-left:3px}
+
+        select,textarea,input[type="text"]{
+            width:100%;background:rgba(58,51,42,.5);
+            border:1px solid rgba(224,200,90,.15);border-radius:4px;
+            color:var(--blanc);font-family:'Cormorant Garamond',Georgia,serif;
+            font-size:1rem;padding:.7rem .9rem;transition:border-color .3s;outline:none;
+        }
+        select:focus,textarea:focus,input[type="text"]:focus{border-color:var(--or)}
+        select{
+            cursor:pointer;appearance:none;-webkit-appearance:none;
+            background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23bfb9ae' fill='none' stroke-width='1.5'/%3E%3C/svg%3E");
+            background-repeat:no-repeat;background-position:right .9rem center;padding-right:2.5rem;
+        }
+        select option{background:var(--fond-card);color:var(--blanc)}
+        textarea{resize:vertical;min-height:65px}
+        textarea::placeholder,input[type="text"]::placeholder{color:var(--gris-moyen);font-style:italic}
+
+        /* ═══ Chips ═══ */
+        .chips{display:flex;flex-wrap:wrap;gap:.45rem}
+        .chip{
+            display:inline-flex;align-items:center;gap:.3rem;
+            padding:.4rem .8rem;border-radius:4px;font-size:.82rem;cursor:pointer;
+            border:1px solid rgba(224,200,90,.12);background:rgba(58,51,42,.3);
+            color:var(--gris);transition:all .25s;user-select:none;
+        }
+        .chip:hover{border-color:rgba(224,200,90,.3);color:var(--blanc)}
+        .chip.on{border-color:var(--or);background:rgba(224,200,90,.1);color:var(--or)}
+        .chip-ico{font-size:.9rem}
+
+        /* ═══ Radio ═══ */
+        .radios{display:flex;flex-direction:column;gap:.45rem}
+        .radio{
+            display:flex;align-items:center;gap:.7rem;
+            padding:.6rem .9rem;border-radius:4px;
+            border:1px solid rgba(224,200,90,.1);background:rgba(58,51,42,.2);
+            cursor:pointer;transition:all .25s;
+        }
+        .radio:hover{border-color:rgba(224,200,90,.25)}
+        .radio.on{border-color:var(--or);background:rgba(224,200,90,.08)}
+        .radio-dot{
+            width:16px;height:16px;border-radius:50%;
+            border:1.5px solid var(--gris-moyen);
+            display:flex;align-items:center;justify-content:center;
+            flex-shrink:0;transition:border-color .3s;
+        }
+        .radio.on .radio-dot{border-color:var(--or)}
+        .radio-dot::after{
+            content:'';width:7px;height:7px;border-radius:50%;
+            background:var(--or);transform:scale(0);transition:transform .2s;
+        }
+        .radio.on .radio-dot::after{transform:scale(1)}
+        .radio-txt{font-size:.9rem;color:var(--gris);font-weight:300}
+        .radio.on .radio-txt{color:var(--blanc)}
+
+        /* ═══ Errors ═══ */
+        .err{font-size:.78rem;color:var(--rouge);margin-top:.3rem;display:none}
+        .err.show{display:block}
+
+        /* ═══ Buttons ═══ */
+        .btns{display:flex;gap:.8rem;margin-top:2rem}
+        .btn{
+            flex:1;padding:.7rem 1.2rem;border-radius:4px;
+            font-family:'Cormorant Garamond',Georgia,serif;
+            font-size:1rem;cursor:pointer;border:none;letter-spacing:.1em;transition:all .3s;
+        }
+        .btn-prev{background:transparent;color:var(--gris);border:1px solid rgba(224,200,90,.15)}
+        .btn-prev:hover{border-color:var(--or);color:var(--blanc)}
+        .btn-next{background:transparent;border:1px solid var(--or);color:var(--or)}
+        .btn-next:hover{background:var(--or);color:var(--fond)}
+        .btn-gen{background:transparent;border:1px solid var(--vert);color:var(--vert)}
+        .btn-gen:hover{background:var(--vert);color:var(--fond)}
+
+        /* ═══ Result ═══ */
+        .result{display:none;animation:fadeIn .5s ease}
+        .result.visible{display:block}
+        .result-head{text-align:center;margin-bottom:1.8rem}
+        .result-head .emoji{font-size:2.2rem;display:block;margin-bottom:.5rem}
+        .result-head h2{font-size:1.6rem;font-weight:300;color:var(--blanc);letter-spacing:.08em;margin-bottom:.3rem}
+        .result-head p{font-size:.9rem;color:var(--gris);font-weight:300}
+
+        .prompt-box{
+            background:rgba(58,51,42,.4);border:1px solid rgba(224,200,90,.12);
+            border-radius:6px;padding:1.2rem;margin-bottom:1rem;
+        }
+        .prompt-text{
+            font-size:.88rem;line-height:1.8;color:var(--gris);
+            white-space:pre-wrap;word-wrap:break-word;
+            max-height:380px;overflow-y:auto;font-weight:300;
+        }
+        .prompt-text::-webkit-scrollbar{width:3px}
+        .prompt-text::-webkit-scrollbar-thumb{background:rgba(224,200,90,.2);border-radius:3px}
+
+        .btn-copy{
+            display:flex;align-items:center;justify-content:center;gap:.5rem;
+            width:100%;padding:.8rem;border-radius:4px;
+            background:transparent;border:1px solid var(--or);color:var(--or);
+            font-family:'Cormorant Garamond',Georgia,serif;
+            font-size:1.05rem;letter-spacing:.15em;cursor:pointer;transition:all .3s;margin-bottom:1.5rem;
+        }
+        .btn-copy:hover{background:var(--or);color:var(--fond)}
+        .btn-copy.copied{border-color:var(--vert);color:var(--vert)}
+        .btn-copy.copied:hover{background:var(--vert);color:var(--fond)}
+
+        .suggestions{margin-top:1.8rem}
+        .suggestions h3{font-size:1rem;font-weight:300;color:var(--blanc);margin-bottom:.8rem;letter-spacing:.05em}
+        .sug{
+            display:block;width:100%;text-align:left;
+            padding:.65rem .9rem;margin-bottom:.4rem;border-radius:4px;
+            border:1px solid rgba(224,200,90,.08);background:rgba(58,51,42,.2);
+            color:var(--gris);font-family:'Cormorant Garamond',Georgia,serif;
+            font-size:.88rem;cursor:pointer;transition:all .25s;font-weight:300;
+        }
+        .sug:hover{border-color:var(--or);color:var(--or)}
+        .sug.copied-sug{border-color:var(--vert);color:var(--vert)}
+
+        .pedagogy{
+            margin-top:2rem;padding:1rem 1.2rem;border-radius:4px;
+            background:rgba(224,200,90,.04);border:1px solid rgba(224,200,90,.12);
+        }
+        .pedagogy h4{font-size:.9rem;font-weight:400;color:var(--or);margin-bottom:.4rem;letter-spacing:.05em}
+        .pedagogy p{font-size:.85rem;color:var(--gris);line-height:1.6;font-weight:300}
+
+        .btn-restart{
+            display:block;margin:2rem auto 0;padding:.6rem 1.5rem;border-radius:4px;
+            background:transparent;border:1px solid rgba(224,200,90,.15);
+            color:var(--gris-moyen);font-family:'Cormorant Garamond',Georgia,serif;
+            font-size:.85rem;cursor:pointer;letter-spacing:.1em;transition:all .3s;
+        }
+        .btn-restart:hover{border-color:var(--or);color:var(--or)}
+
+        .back-link{
+            display:block;text-align:center;margin-top:1.5rem;
+            font-size:.75rem;color:var(--gris-moyen);text-decoration:none;
+            letter-spacing:.15em;transition:color .3s;
+        }
+        .back-link:hover{color:var(--or)}
+
+        @media(max-width:600px){
+            .container{padding:2rem 1rem 2.5rem}
+            .app-logo{font-size:1.4rem;letter-spacing:.3em}
+            .intro h1{font-size:1.6rem}
+            .step-title{font-size:1.3rem}
+            .btns{flex-direction:column-reverse}
+            .chips{gap:.35rem}
+            .chip{font-size:.75rem;padding:.35rem .65rem}
+        }
+    </style>
+</head>
+<body>
+
+<div class="rainbow-overlay"></div>
+
+<div class="container">
+
+    <div class="app-header">
+        <div class="app-logo"><a href="apps.html">IAKAI</a></div>
+        <div class="app-tagline">L'art de raconter autrement</div>
+    </div>
+
+    <!-- INTRO -->
+    <div class="intro" id="intro">
+        <span class="intro-emoji">🧭</span>
+        <h1>Ton orientation, <em>ton prompt</em></h1>
+        <p>Réponds à quelques questions et on te prépare la question parfaite à poser à une IA pour t'aider dans ton orientation. Aucune donnée n'est collectée.</p>
+        <div class="time-badge">⏱ 3 à 5 minutes</div>
+        <br>
+        <button class="intro-btn" onclick="startForm()">C'est parti</button>
+    </div>
+
+    <!-- PROGRESS -->
+    <div class="progress" id="progress">
+        <div class="progress-steps">
+            <div class="progress-label active" data-s="1">Profil</div>
+            <div class="progress-label" data-s="2">Bilan</div>
+            <div class="progress-label" data-s="3">Envies</div>
+            <div class="progress-label" data-s="4">Projection</div>
+            <div class="progress-label" data-s="5">Réglages</div>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" id="pFill"></div></div>
+    </div>
+
+    <!-- STEP 1 -->
+    <div class="step" id="s1">
+        <div class="step-number">Étape 1 sur 5</div>
+        <div class="step-title">👤 Qui es-tu ?</div>
+        <div class="step-desc">On commence par les bases. Ces infos permettront à l'IA de te répondre de manière personnalisée.</div>
+
+        <div class="field">
+            <label class="field-label">Dans quelle classe es-tu ?<span class="req">*</span></label>
+            <select id="niveau">
+                <option value="">— Choisis ton niveau —</option>
+                <option>4ème</option><option>3ème</option>
+                <option>Seconde générale et technologique</option>
+                <option>Seconde professionnelle</option>
+                <option>Première générale</option><option>Première technologique</option>
+                <option>Première professionnelle</option>
+                <option>Terminale générale</option><option>Terminale technologique</option>
+                <option>Terminale professionnelle</option>
+                <option>CAP</option><option>Autre situation</option>
+            </select>
+            <div class="err" id="e-niveau">Merci de sélectionner ton niveau.</div>
+        </div>
+
+        <div class="field">
+            <label class="field-label">C'est pour qui ?<span class="req">*</span></label>
+            <div class="radios" id="destinataire">
+                <div class="radio" data-v="eleve" onclick="pickRadio(this)"><div class="radio-dot"></div><div class="radio-txt">🙋 Pour moi, je suis l'élève</div></div>
+                <div class="radio" data-v="parent" onclick="pickRadio(this)"><div class="radio-dot"></div><div class="radio-txt">👨‍👩‍👧 Je suis un parent</div></div>
+                <div class="radio" data-v="enseignant" onclick="pickRadio(this)"><div class="radio-dot"></div><div class="radio-txt">🧑‍🏫 Je suis enseignant·e / éducateur·rice</div></div>
+            </div>
+            <div class="err" id="e-destinataire">Merci de choisir un profil.</div>
+        </div>
+
+        <div class="field">
+            <label class="field-label">Ville ou département<span class="req">*</span></label>
+            <input type="text" id="localisation" placeholder="Ex : Toulouse, Haute-Garonne, 31…">
+            <div class="err" id="e-localisation">Indique ta ville ou ton département.</div>
+        </div>
+
+        <div class="btns"><button class="btn btn-next" onclick="goTo(2)">Suivant →</button></div>
+    </div>
+
+    <!-- STEP 2 -->
+    <div class="step" id="s2">
+        <div class="step-number">Étape 2 sur 5</div>
+        <div class="step-title">📊 Ton bilan scolaire</div>
+        <div class="step-desc">Tes points forts et tes difficultés aident l'IA à te proposer des filières réalistes et adaptées — pas juste des idées en l'air.</div>
+
+        <div class="field">
+            <label class="field-label">Comment ça se passe globalement ?<span class="req">*</span></label>
+            <div class="radios" id="global">
+                <div class="radio" data-v="Très bien, bons résultats dans l'ensemble" onclick="pickRadio(this)"><div class="radio-dot"></div><div class="radio-txt">🟢 Très bien, bons résultats</div></div>
+                <div class="radio" data-v="Correct, quelques difficultés" onclick="pickRadio(this)"><div class="radio-dot"></div><div class="radio-txt">🟡 Correct, quelques difficultés</div></div>
+                <div class="radio" data-v="Difficile, résultats en baisse" onclick="pickRadio(this)"><div class="radio-dot"></div><div class="radio-txt">🟠 Difficile, résultats en baisse</div></div>
+                <div class="radio" data-v="En décrochage ou situation compliquée" onclick="pickRadio(this)"><div class="radio-dot"></div><div class="radio-txt">🔴 En décrochage ou situation compliquée</div></div>
+            </div>
+            <div class="err" id="e-global">Merci d'indiquer ta situation.</div>
+        </div>
+
+        <div class="field">
+            <label class="field-label">Matières où tu es à l'aise<span class="req">*</span></label>
+            <div class="chips" id="mat-fortes">
+                <div class="chip" onclick="toggleChip(this)"><span class="chip-ico">🔢</span> Maths</div>
+                <div class="chip" onclick="toggleChip(this)"><span class="chip-ico">🧪</span> Sciences</div>
+                <div class="chip" onclick="toggleChip(this)"><span class="chip-ico">📖</span> Français</div>
+                <div class="chip" onclick="toggleChip(this)"><span class="chip-ico">🌍</span> Histoire-Géo</div>
+                <div class="chip" onclick="toggleChip(this)"><span class="chip-ico">🇬🇧</span> Langues</div>
+                <div class="chip" onclick="toggleChip(this)"><span class="chip-ico">💻</span> Techno / NSI</div>
+                <div class="chip" onclick="toggleChip(this)"><span class="chip-ico">🎨</span> Arts</div>
+                <div class="chip" onclick="toggleChip(this)"><span class="chip-ico">⚽</span> Sport / EPS</div>
+                <div class="chip" onclick="toggleChip(this)"><span class="chip-ico">💰</span> SES / Éco</div>
+                <div class="chip" onclick="toggleChip(this)"><span class="chip-ico">⚙️</span> Atelier / Pratique pro</div>
+            </div>
+            <div class="err" id="e-mat-fortes">Sélectionne au moins une matière.</div>
+        </div>
+
+        <div class="field">
+            <label class="field-label">Matières où c'est plus dur<span class="req">*</span></label>
+            <div class="chips" id="mat-faibles">
+                <div class="chip" onclick="toggleChip(this)"><span class="chip-ico">🔢</span> Maths</div>
+                <div class="chip" onclick="toggleChip(this)"><span class="chip-ico">🧪</span> Sciences</div>
+                <div class="chip" onclick="toggleChip(this)"><span class="chip-ico">📖</span> Français</div>
+                <div class="chip" onclick="toggleChip(this)"><span class="chip-ico">🌍</span> Histoire-Géo</div>
+                <div class="chip" onclick="toggleChip(this)"><span class="chip-ico">🇬🇧</span> Langues</div>
+                <div class="chip" onclick="toggleChip(this)"><span class="chip-ico">💻</span> Techno / NSI</div>
+                <div class="chip" onclick="toggleChip(this)"><span class="chip-ico">🎨</span> Arts</div>
+                <div class="chip" onclick="toggleChip(this)"><span class="chip-ico">⚽</span> Sport / EPS</div>
+                <div class="chip" onclick="toggleChip(this)"><span class="chip-ico">💰</span> SES / Éco</div>
+                <div class="chip" onclick="toggleChip(this)"><span class="chip-ico">⚙️</span> Atelier / Pratique pro</div>
+            </div>
+            <div class="err" id="e-mat-faibles">Sélectionne au moins une matière.</div>
+        </div>
+
+        <div class="field">
+            <label class="field-label">Quelque chose à préciser sur ta scolarité ?<span class="req">*</span></label>
+            <textarea id="precision" placeholder="Redoublement, changement de filière, situation particulière, ou simplement « RAS » si tout va bien…"></textarea>
+            <div class="err" id="e-precision">Un mot minimum — même « RAS » ça compte !</div>
+        </div>
+
+        <div class="btns">
+            <button class="btn btn-prev" onclick="goTo(1)">← Retour</button>
+            <button class="btn btn-next" onclick="goTo(3)">Suivant →</button>
+        </div>
+    </div>
+
+    <!-- STEP 3 -->
+    <div class="step" id="s3">
+        <div class="step-number">Étape 3 sur 5</div>
+        <div class="step-title">💡 Ce qui t'attire</div>
+        <div class="step-desc">Tes passions et centres d'intérêt comptent autant que tes notes — ils peuvent révéler des métiers auxquels tu n'as pas encore pensé.</div>
+
+        <div class="field">
+            <label class="field-label">Domaines qui t'intéressent<span class="req">*</span></label>
+            <div class="chips" id="domaines">
+                <div class="chip" onclick="toggleChip(this)"><span class="chip-ico">💻</span> Numérique / Tech</div>
+                <div class="chip" onclick="toggleChip(this)"><span class="chip-ico">🏥</span> Santé / Médical</div>
+                <div class="chip" onclick="toggleChip(this)"><span class="chip-ico">🎨</span> Art / Création / Design</div>
+                <div class="chip" onclick="toggleChip(this)"><span class="chip-ico">🏗️</span> Artisanat / BTP</div>
+                <div class="chip" onclick="toggleChip(this)"><span class="chip-ico">📈</span> Commerce / Vente</div>
+                <div class="chip" onclick="toggleChip(this)"><span class="chip-ico">⚖️</span> Droit / Sécurité</div>
+                <div class="chip" onclick="toggleChip(this)"><span class="chip-ico">🌱</span> Nature / Environnement</div>
+                <div class="chip" onclick="toggleChip(this)"><span class="chip-ico">🤝</span> Social / Éducation</div>
+                <div class="chip" onclick="toggleChip(this)"><span class="chip-ico">🏭</span> Industrie / Ingénierie</div>
+                <div class="chip" onclick="toggleChip(this)"><span class="chip-ico">🍳</span> Cuisine / Hôtellerie</div>
+                <div class="chip" onclick="toggleChip(this)"><span class="chip-ico">⚽</span> Sport / Bien-être</div>
+                <div class="chip" onclick="toggleChip(this)"><span class="chip-ico">🎬</span> Média / Communication</div>
+                <div class="chip" onclick="toggleChip(this)"><span class="chip-ico">✈️</span> Transport / Logistique</div>
+                <div class="chip" onclick="toggleChip(this)"><span class="chip-ico">🧬</span> Sciences / Recherche</div>
+            </div>
+            <div class="err" id="e-domaines">Sélectionne au moins un domaine.</div>
+        </div>
+
+        <div class="field">
+            <label class="field-label">As-tu déjà une idée de filière ou de métier ?<span class="req">*</span></label>
+            <textarea id="idee" placeholder="Ex : « je voudrais faire un bac techno STI2D », « infirmier·e », « je ne sais pas du tout »… Tout est ok !"></textarea>
+            <div class="err" id="e-idee">Même « je ne sais pas » c'est une réponse utile !</div>
+        </div>
+
+        <div class="field">
+            <label class="field-label">Qu'est-ce que tu aimes faire en dehors des cours ?<span class="req">*</span></label>
+            <textarea id="hobbies" placeholder="Gaming, sport, bricolage, dessiner, regarder des vidéos YouTube, coder, cuisiner… tout compte !"></textarea>
+            <div class="err" id="e-hobbies">Dis-nous ce que tu aimes — même regarder des vidéos ça compte !</div>
+        </div>
+
+        <div class="btns">
+            <button class="btn btn-prev" onclick="goTo(2)">← Retour</button>
+            <button class="btn btn-next" onclick="goTo(4)">Suivant →</button>
+        </div>
+    </div>
+
+    <!-- STEP 4 -->
+    <div class="step" id="s4">
+        <div class="step-number">Étape 4 sur 5</div>
+        <div class="step-title">🔮 Comment tu te projettes</div>
+        <div class="step-desc">Pas besoin d'avoir tout planifié. Ces préférences aident l'IA à filtrer les parcours qui te correspondent vraiment.</div>
+
+        <div class="field">
+            <label class="field-label">Études longues ou courtes ?<span class="req">*</span></label>
+            <div class="radios" id="duree">
+                <div class="radio" data-v="Études courtes (CAP, BEP, Bac pro — entrer vite dans la vie active)" onclick="pickRadio(this)"><div class="radio-dot"></div><div class="radio-txt">⚡ Courtes — je veux travailler assez vite</div></div>
+                <div class="radio" data-v="Études moyennes (BTS, DUT, Licence — 2 à 3 ans après le bac)" onclick="pickRadio(this)"><div class="radio-dot"></div><div class="radio-txt">📐 Moyennes — 2 à 3 ans après le bac</div></div>
+                <div class="radio" data-v="Études longues (Master, école d'ingénieur, médecine — 5 ans et plus)" onclick="pickRadio(this)"><div class="radio-dot"></div><div class="radio-txt">🎓 Longues — 5 ans et plus, ça ne me fait pas peur</div></div>
+                <div class="radio" data-v="Je ne sais pas encore" onclick="pickRadio(this)"><div class="radio-dot"></div><div class="radio-txt">🤷 Je ne sais pas encore</div></div>
+            </div>
+            <div class="err" id="e-duree">Merci de faire un choix.</div>
+        </div>
+
+        <div class="field">
+            <label class="field-label">Comment tu imagines ton quotidien pro ?<span class="req">*</span></label>
+            <div class="chips" id="quotidien">
+                <div class="chip" onclick="toggleChip(this)"><span class="chip-ico">🖥️</span> Derrière un écran</div>
+                <div class="chip" onclick="toggleChip(this)"><span class="chip-ico">🤝</span> Avec des gens</div>
+                <div class="chip" onclick="toggleChip(this)"><span class="chip-ico">🔧</span> Avec les mains</div>
+                <div class="chip" onclick="toggleChip(this)"><span class="chip-ico">🌳</span> En extérieur</div>
+                <div class="chip" onclick="toggleChip(this)"><span class="chip-ico">🚗</span> En déplacement</div>
+                <div class="chip" onclick="toggleChip(this)"><span class="chip-ico">🏠</span> En télétravail</div>
+                <div class="chip" onclick="toggleChip(this)"><span class="chip-ico">👔</span> En bureau / entreprise</div>
+                <div class="chip" onclick="toggleChip(this)"><span class="chip-ico">🎤</span> Sur scène / devant un public</div>
+            </div>
+            <div class="err" id="e-quotidien">Choisis au moins une option.</div>
+        </div>
+
+        <div class="field">
+            <label class="field-label">Mobilité géographique ?<span class="req">*</span></label>
+            <div class="radios" id="mobilite">
+                <div class="radio" data-v="Je préfère rester dans ma région" onclick="pickRadio(this)"><div class="radio-dot"></div><div class="radio-txt">🏡 Je préfère rester dans ma région</div></div>
+                <div class="radio" data-v="Je suis prêt·e à bouger en France" onclick="pickRadio(this)"><div class="radio-dot"></div><div class="radio-txt">🚄 Prêt·e à bouger en France</div></div>
+                <div class="radio" data-v="Pourquoi pas à l'étranger" onclick="pickRadio(this)"><div class="radio-dot"></div><div class="radio-txt">✈️ Pourquoi pas à l'étranger</div></div>
+            </div>
+            <div class="err" id="e-mobilite">Merci de choisir une option.</div>
+        </div>
+
+        <div class="btns">
+            <button class="btn btn-prev" onclick="goTo(3)">← Retour</button>
+            <button class="btn btn-next" onclick="goTo(5)">Suivant →</button>
+        </div>
+    </div>
+
+    <!-- STEP 5 -->
+    <div class="step" id="s5">
+        <div class="step-number">Étape 5 sur 5</div>
+        <div class="step-title">⚙️ Tes attentes pour la réponse</div>
+        <div class="step-desc">Dernière ligne droite ! Dis-nous comment tu veux que l'IA te réponde pour qu'on ajuste le prompt.</div>
+
+        <div class="field">
+            <label class="field-label">Combien de parcours proposés ?<span class="req">*</span></label>
+            <div class="radios" id="nb">
+                <div class="radio" data-v="2" onclick="pickRadio(this)"><div class="radio-dot"></div><div class="radio-txt">2 parcours — simple et ciblé</div></div>
+                <div class="radio" data-v="3" onclick="pickRadio(this)"><div class="radio-dot"></div><div class="radio-txt">3 parcours — bon équilibre</div></div>
+                <div class="radio" data-v="5" onclick="pickRadio(this)"><div class="radio-dot"></div><div class="radio-txt">5 parcours — je veux explorer large</div></div>
+            </div>
+            <div class="err" id="e-nb">Merci de choisir.</div>
+        </div>
+
+        <div class="field">
+            <label class="field-label">Niveau de détail ?<span class="req">*</span></label>
+            <div class="radios" id="detail">
+                <div class="radio" data-v="une vue d'ensemble avec les grandes étapes" onclick="pickRadio(this)"><div class="radio-dot"></div><div class="radio-txt">🗺️ Vue d'ensemble — les grandes étapes</div></div>
+                <div class="radio" data-v="un plan détaillé année par année avec établissements et débouchés" onclick="pickRadio(this)"><div class="radio-dot"></div><div class="radio-txt">📋 Détaillé — année par année, établissements, débouchés</div></div>
+            </div>
+            <div class="err" id="e-detail">Merci de choisir un niveau de détail.</div>
+        </div>
+
+        <div class="field">
+            <label class="field-label">Que veux-tu voir dans la réponse ?<span class="req">*</span></label>
+            <div class="chips" id="inclure">
+                <div class="chip" onclick="toggleChip(this)"><span class="chip-ico">🏫</span> Établissements proches</div>
+                <div class="chip" onclick="toggleChip(this)"><span class="chip-ico">💶</span> Salaires / débouchés</div>
+                <div class="chip" onclick="toggleChip(this)"><span class="chip-ico">⚖️</span> Avantages et inconvénients</div>
+                <div class="chip" onclick="toggleChip(this)"><span class="chip-ico">📅</span> Calendrier Parcoursup</div>
+                <div class="chip" onclick="toggleChip(this)"><span class="chip-ico">🔗</span> Liens utiles</div>
+                <div class="chip" onclick="toggleChip(this)"><span class="chip-ico">🧑‍💼</span> Témoignages / profils types</div>
+            </div>
+            <div class="err" id="e-inclure">Sélectionne au moins un élément.</div>
+        </div>
+
+        <div class="btns">
+            <button class="btn btn-prev" onclick="goTo(4)">← Retour</button>
+            <button class="btn btn-gen" onclick="generate()">✨ Générer mon prompt</button>
+        </div>
+    </div>
+
+    <!-- RESULT -->
+    <div class="result" id="result">
+        <div class="result-head">
+            <span class="emoji">✅</span>
+            <h2>Ton prompt est prêt</h2>
+            <p>Copie-le et colle-le dans l'IA de ton choix — ChatGPT, Claude, Gemini, Mistral…</p>
+        </div>
+
+        <div class="prompt-box"><div class="prompt-text" id="out"></div></div>
+
+        <button class="btn-copy" id="btnCopy" onclick="copyPrompt()">Copier le prompt</button>
+
+        <div class="suggestions">
+            <h3>💬 Continue la conversation avec ces relances :</h3>
+            <button class="sug" onclick="copySug(this)">« Peux-tu détailler le parcours qui te semble le plus adapté à mon profil ? »</button>
+            <button class="sug" onclick="copySug(this)">« Quels établissements précis me recommandes-tu près de chez moi ? »</button>
+            <button class="sug" onclick="copySug(this)">« Quels sont les critères de sélection et les dates limites pour ces filières ? »</button>
+            <button class="sug" onclick="copySug(this)">« Si je change d'avis en cours de route, quelles passerelles existent ? »</button>
+        </div>
+
+        <div class="pedagogy">
+            <h4>💡 Pourquoi ce prompt fonctionne ?</h4>
+            <p>Il donne à l'IA un rôle précis (conseiller d'orientation), un contexte riche (ton profil, tes notes, tes envies), une demande claire (nombre de parcours, niveau de détail) et des contraintes (système éducatif français, ta région). La qualité d'une réponse dépend toujours de la qualité de la question — c'est ce qu'on vient de construire ensemble.</p>
+        </div>
+
+        <button class="btn-restart" onclick="restart()">🔄 Recommencer</button>
+        <a href="apps.html" class="back-link">← Retour à IAKAI</a>
+    </div>
+
+</div>
+
+<script>
+let cur=0;
+
+function startForm(){
+    cur=1;
+    document.getElementById('intro').style.display='none';
+    document.getElementById('progress').classList.add('visible');
+    show(1);
+}
+
+function show(n){
+    for(let i=1;i<=5;i++){const e=document.getElementById('s'+i);if(e)e.classList.remove('visible')}
+    document.getElementById('s'+n).classList.add('visible');
+    document.getElementById('pFill').style.width=(n*20)+'%';
+    document.querySelectorAll('.progress-label').forEach(l=>{
+        const s=parseInt(l.dataset.s);
+        l.classList.remove('active','done');
+        if(s<n)l.classList.add('done');
+        if(s===n)l.classList.add('active');
+    });
+    window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function goTo(n){if(n>cur&&!validate(cur))return;cur=n;show(n)}
+
+function pickRadio(el){
+    el.parentElement.querySelectorAll('.radio').forEach(r=>r.classList.remove('on'));
+    el.classList.add('on');
+}
+function toggleChip(el){el.classList.toggle('on')}
+function radioVal(id){const s=document.getElementById(id).querySelector('.radio.on');return s?s.dataset.v:''}
+function chipsVal(id){return Array.from(document.getElementById(id).querySelectorAll('.chip.on')).map(c=>c.textContent.trim())}
+
+function showErr(id){document.getElementById(id).classList.add('show')}
+function hideAllErr(){document.querySelectorAll('.err').forEach(e=>e.classList.remove('show'))}
+
+function validate(step){
+    hideAllErr();let ok=true;
+    if(step===1){
+        if(!document.getElementById('niveau').value){showErr('e-niveau');ok=false}
+        if(!radioVal('destinataire')){showErr('e-destinataire');ok=false}
+        if(!document.getElementById('localisation').value.trim()){showErr('e-localisation');ok=false}
+    }
+    if(step===2){
+        if(!radioVal('global')){showErr('e-global');ok=false}
+        if(!chipsVal('mat-fortes').length){showErr('e-mat-fortes');ok=false}
+        if(!chipsVal('mat-faibles').length){showErr('e-mat-faibles');ok=false}
+        if(!document.getElementById('precision').value.trim()){showErr('e-precision');ok=false}
+    }
+    if(step===3){
+        if(!chipsVal('domaines').length){showErr('e-domaines');ok=false}
+        if(!document.getElementById('idee').value.trim()){showErr('e-idee');ok=false}
+        if(!document.getElementById('hobbies').value.trim()){showErr('e-hobbies');ok=false}
+    }
+    if(step===4){
+        if(!radioVal('duree')){showErr('e-duree');ok=false}
+        if(!chipsVal('quotidien').length){showErr('e-quotidien');ok=false}
+        if(!radioVal('mobilite')){showErr('e-mobilite');ok=false}
+    }
+    if(step===5){
+        if(!radioVal('nb')){showErr('e-nb');ok=false}
+        if(!radioVal('detail')){showErr('e-detail');ok=false}
+        if(!chipsVal('inclure').length){showErr('e-inclure');ok=false}
+    }
+    if(!ok){const f=document.querySelector('.err.show');if(f)f.scrollIntoView({behavior:'smooth',block:'center'})}
+    return ok;
+}
+
+function generate(){
+    if(!validate(5))return;
+    const d=id=>document.getElementById(id).value.trim();
+    const niveau=document.getElementById('niveau').value;
+    const dest=radioVal('destinataire');
+    const loc=d('localisation'),glob=radioVal('global');
+    const fortes=chipsVal('mat-fortes').join(', '),faibles=chipsVal('mat-faibles').join(', ');
+    const prec=d('precision'),dom=chipsVal('domaines').join(', ');
+    const idee=d('idee'),hob=d('hobbies');
+    const dur=radioVal('duree'),quot=chipsVal('quotidien').join(', '),mob=radioVal('mobilite');
+    const nbp=radioVal('nb'),det=radioVal('detail'),inc=chipsVal('inclure').join(', ');
+
+    let tone='';
+    if(dest==='eleve')tone="Adopte un ton bienveillant, accessible et encourageant, adapté à un·e adolescent·e. Tutoie-moi.";
+    else if(dest==='parent')tone="Adopte un ton professionnel mais chaleureux, adapté à un parent qui accompagne son enfant. Vouvoyez-moi.";
+    else tone="Adopte un ton professionnel et structuré, adapté à un·e enseignant·e ou éducateur·rice. Vouvoyez-moi.";
+
+    const prompt=`Tu es un conseiller d'orientation scolaire expert du système éducatif français (collège, lycée, post-bac, filières professionnelles, technologiques et générales). Tu connais les procédures d'orientation, Parcoursup, les passerelles entre filières et les réalités du marché de l'emploi.
+
+${tone}
+
+Voici mon profil :
+— Niveau actuel : ${niveau}
+— Situation scolaire globale : ${glob}
+— Matières où je suis à l'aise : ${fortes}
+— Matières où j'ai des difficultés : ${faibles}
+— Précisions sur ma scolarité : ${prec}
+— Localisation : ${loc}
+
+Mes centres d'intérêt et aspirations :
+— Domaines qui m'attirent : ${dom}
+— Idée de filière ou métier : ${idee}
+— Ce que j'aime faire en dehors des cours : ${hob}
+
+Ma projection :
+— Durée d'études envisagée : ${dur}
+— Quotidien professionnel idéal : ${quot}
+— Mobilité géographique : ${mob}
+
+Ma demande :
+Propose-moi ${nbp} parcours d'orientation adaptés à mon profil. Pour chaque parcours, présente ${det}.
+
+Inclus dans ta réponse : ${inc}.
+
+Pour chaque parcours, indique clairement les avantages et les points de vigilance. Base-toi uniquement sur des filières et établissements réels existant dans le système éducatif français. Si certaines informations de mon profil sont contradictoires ou insuffisantes, signale-le et propose des alternatives.`;
+
+    document.getElementById('out').textContent=prompt;
+    document.getElementById('progress').classList.remove('visible');
+    for(let i=1;i<=5;i++)document.getElementById('s'+i).classList.remove('visible');
+    document.getElementById('result').classList.add('visible');
+    window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function copyPrompt(){
+    navigator.clipboard.writeText(document.getElementById('out').textContent).then(()=>{
+        const b=document.getElementById('btnCopy');
+        b.classList.add('copied');b.textContent='✅ Copié !';
+        setTimeout(()=>{b.classList.remove('copied');b.textContent='Copier le prompt'},2500);
+    });
+}
+
+function copySug(el){
+    const t=el.textContent.replace(/[«»]/g,'').trim();
+    navigator.clipboard.writeText(t).then(()=>{
+        el.classList.add('copied-sug');const o=el.textContent;el.textContent='✅ Copié !';
+        setTimeout(()=>{el.classList.remove('copied-sug');el.textContent=o},2000);
+    });
+}
+
+function restart(){
+    document.getElementById('niveau').value='';
+    document.getElementById('localisation').value='';
+    document.getElementById('precision').value='';
+    document.getElementById('idee').value='';
+    document.getElementById('hobbies').value='';
+    document.querySelectorAll('.radio').forEach(r=>r.classList.remove('on'));
+    document.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));
+    hideAllErr();
+    document.getElementById('result').classList.remove('visible');
+    document.getElementById('intro').style.display='';
+    document.getElementById('progress').classList.remove('visible');
+    cur=0;window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+
+</body>
+</html>
