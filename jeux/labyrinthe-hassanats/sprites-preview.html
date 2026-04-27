@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sprites — Prévisualisation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+<style>
+  /* ===== Reset minimal ===== */
+  *, *::before, *::after { box-sizing: border-box; }
+  body, h1, h2, h3, p, pre { margin: 0; }
+  button { font: inherit; cursor: pointer; }
+
+  /* ===== Variables ===== */
+  :root {
+    --paper: #fdfdf6;
+    --paper-line: #b8d4e8;
+    --paper-line-strong: #8fb8d4;
+    --ink: #1a4d8f;
+    --ink-soft: #2c5fa0;
+    --red: #d63838;
+    --green: #2e9c3e;
+    --gold: #e8b837;
+    --shadow: rgba(26, 77, 143, 0.15);
+  }
+
+  /* ===== Fond papier quadrillé ===== */
+  body {
+    font-family: 'Patrick Hand', 'Comic Sans MS', sans-serif;
+    color: var(--ink);
+    background-color: var(--paper);
+    background-image:
+      linear-gradient(var(--paper-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--paper-line) 1px, transparent 1px);
+    background-size: 24px 24px;
+    background-position: -1px -1px;
+    min-height: 100vh;
+    padding: 40px 24px 80px;
+    font-size: 18px;
+    line-height: 1.5;
+  }
+
+  /* Marge rouge style cahier */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 80px;
+    width: 1px;
+    background: rgba(214, 56, 56, 0.35);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ===== En-tête ===== */
+  .header {
+    max-width: 1100px;
+    margin: 0 auto 48px;
+    padding-left: 40px;
+    position: relative;
+    z-index: 1;
+  }
+  .header h1 {
+    font-family: 'Caveat', cursive;
+    font-size: 64px;
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1;
+    transform: rotate(-1.5deg);
+    margin-bottom: 8px;
+  }
+  .header h1 .underline {
+    display: inline-block;
+    border-bottom: 3px solid var(--ink);
+    padding-bottom: 4px;
+  }
+  .header .subtitle {
+    font-size: 22px;
+    color: var(--ink-soft);
+    margin-top: 12px;
+    transform: rotate(-0.3deg);
+    display: inline-block;
+  }
+  .header .arrow-note {
+    position: absolute;
+    top: 8px;
+    right: 40px;
+    font-family: 'Caveat', cursive;
+    font-size: 26px;
+    color: var(--red);
+    transform: rotate(4deg);
+    text-align: center;
+  }
+  .header .arrow-note svg {
+    display: block;
+    margin: 4px auto 0;
+  }
+
+  /* ===== Cartes sprite ===== */
+  .sprite-card {
+    max-width: 1100px;
+    margin: 0 auto 56px;
+    background: var(--paper);
+    border: 2px solid var(--ink);
+    border-radius: 6px;
+    box-shadow: 4px 5px 0 var(--shadow);
+    padding: 32px 28px 28px;
+    position: relative;
+    z-index: 1;
+  }
+  /* Petit "scotch" en haut */
+  .sprite-card::before {
+    content: '';
+    position: absolute;
+    top: -14px;
+    left: 50%;
+    transform: translateX(-50%) rotate(-2deg);
+    width: 90px;
+    height: 22px;
+    background: rgba(232, 184, 55, 0.45);
+    border: 1px dashed rgba(26, 77, 143, 0.3);
+  }
+
+  .sprite-card h2 {
+    font-family: 'Caveat', cursive;
+    font-size: 38px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 4px;
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+  }
+  .sprite-card h2 .num {
+    color: var(--red);
+    font-size: 32px;
+  }
+  .sprite-card .desc {
+    font-size: 17px;
+    color: var(--ink-soft);
+    margin-bottom: 20px;
+    font-style: italic;
+  }
+
+  /* ===== Galerie 3 tailles ===== */
+  .sizes-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .size-cell {
+    border: 1.5px solid var(--ink);
+    border-radius: 4px;
+    background:
+      linear-gradient(var(--paper-line) 1px, transparent 1px) 0 0 / 12px 12px,
+      linear-gradient(90deg, var(--paper-line) 1px, transparent 1px) 0 0 / 12px 12px,
+      var(--paper);
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    min-height: 200px;
+  }
+  .size-cell .preview {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+  }
+  .size-cell .label {
+    font-family: 'Caveat', cursive;
+    font-size: 22px;
+    color: var(--ink-soft);
+    font-weight: 700;
+  }
+
+  /* ===== Bloc code ===== */
+  .code-block {
+    position: relative;
+    background: #f5f0e6;
+    border: 1.5px dashed var(--ink-soft);
+    border-radius: 4px;
+    padding: 16px 16px 16px 20px;
+    margin-top: 12px;
+  }
+  .code-block pre {
+    font-family: 'JetBrains Mono', 'Courier New', monospace;
+    font-size: 12px;
+    line-height: 1.45;
+    color: #2a3f5c;
+    white-space: pre-wrap;
+    word-break: break-word;
+    max-height: 220px;
+    overflow-y: auto;
+    padding-right: 100px;
+  }
+  .copy-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: var(--ink);
+    color: var(--paper);
+    border: none;
+    padding: 6px 14px;
+    font-family: 'Caveat', cursive;
+    font-size: 18px;
+    font-weight: 700;
+    border-radius: 3px;
+    box-shadow: 2px 2px 0 var(--shadow);
+    transition: transform 0.1s, box-shadow 0.1s;
+  }
+  .copy-btn:hover {
+    transform: translate(-1px, -1px);
+    box-shadow: 3px 3px 0 var(--shadow);
+  }
+  .copy-btn:active {
+    transform: translate(1px, 1px);
+    box-shadow: 1px 1px 0 var(--shadow);
+  }
+  .copy-btn.copied {
+    background: var(--green);
+  }
+
+  /* ===== Footer note ===== */
+  .footer-note {
+    max-width: 1100px;
+    margin: 48px auto 0;
+    padding: 20px 24px;
+    font-family: 'Caveat', cursive;
+    font-size: 22px;
+    color: var(--ink-soft);
+    text-align: center;
+    border-top: 2px dashed var(--paper-line-strong);
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ===== Responsive ===== */
+  @media (max-width: 720px) {
+    body { padding: 24px 12px 60px; }
+    body::before { display: none; }
+    .header { padding-left: 0; }
+    .header h1 { font-size: 44px; }
+    .header .arrow-note { display: none; }
+    .sizes-grid { grid-template-columns: 1fr; }
+    .sprite-card h2 { font-size: 30px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============================================ -->
+<!-- DÉFINITIONS SVG GLOBALES (filters partagés)  -->
+<!-- ============================================ -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <!-- Filter "trait dessiné à la main" : turbulence légère + déplacement -->
+    <filter id="hand-drawn-filter" x="-5%" y="-5%" width="110%" height="110%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.025" numOctaves="2" seed="4" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="1.4"/>
+    </filter>
+  </defs>
+</svg>
+
+<!-- ============================================ -->
+<!-- EN-TÊTE                                      -->
+<!-- ============================================ -->
+<header class="header">
+  <h1><span class="underline">Sprites du jeu</span></h1>
+  <div class="subtitle">— prévisualisation avant intégration dans le labyrinthe</div>
+  <div class="arrow-note">
+    valider chaque dessin
+    <svg width="60" height="40" viewBox="0 0 60 40">
+      <path d="M 50 5 Q 30 10, 15 30" stroke="#d63838" stroke-width="2" fill="none" stroke-linecap="round" filter="url(#hand-drawn-filter)"/>
+      <path d="M 20 25 L 13 32 L 22 32" stroke="#d63838" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" filter="url(#hand-drawn-filter)"/>
+    </svg>
+  </div>
+</header>
+
+<!-- ============================================ -->
+<!-- CARTES SPRITES (générées par JS)             -->
+<!-- ============================================ -->
+<main id="gallery"></main>
+
+<div class="footer-note">
+  → Une fois les 4 sprites validés, on les intègre tels quels dans le jeu Pac-Man.
+</div>
+
+<script>
+/* ===========================================================
+   DÉFINITION DES 4 SPRITES SVG
+   Chaque sprite est un SVG autonome, viewBox 100x100,
+   symétrique verticalement (pour faciliter le flip horizontal
+   quand le personnage change de direction dans le jeu).
+   =========================================================== */
+
+const SPRITES = [
+  {
+    id: 'player-girl',
+    name: 'Joueuse',
+    desc: 'Personnage fille — couettes, robe, traits stylo bleu',
+    svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" class="sprite-girl">
+  <defs>
+    <filter id="hd-girl" x="-5%" y="-5%" width="110%" height="110%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.025" numOctaves="2" seed="4"/>
+      <feDisplacementMap in="SourceGraphic" scale="1.4"/>
+    </filter>
+  </defs>
+  <g fill="none" stroke="#1a4d8f" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" filter="url(#hd-girl)">
+    <!-- Tête -->
+    <circle cx="50" cy="22" r="11"/>
+    <!-- Couettes (deux petites masses de cheveux) -->
+    <path d="M 39 18 Q 32 22, 33 32 Q 37 30, 39 25" fill="#1a4d8f"/>
+    <path d="M 61 18 Q 68 22, 67 32 Q 63 30, 61 25" fill="#1a4d8f"/>
+    <!-- Frange -->
+    <path d="M 42 16 Q 50 13, 58 16" stroke-width="2"/>
+    <!-- Yeux -->
+    <circle cx="46" cy="22" r="0.9" fill="#1a4d8f" stroke="none"/>
+    <circle cx="54" cy="22" r="0.9" fill="#1a4d8f" stroke="none"/>
+    <!-- Sourire discret -->
+    <path d="M 46 27 Q 50 29, 54 27" stroke-width="1.6"/>
+    <!-- Cou -->
+    <line x1="50" y1="33" x2="50" y2="38"/>
+    <!-- Robe (triangle) -->
+    <path d="M 50 38 L 32 76 L 68 76 Z" fill="#e8d4f0"/>
+    <!-- Détail ceinture -->
+    <line x1="40" y1="58" x2="60" y2="58" stroke-width="1.6"/>
+    <!-- Bras -->
+    <line x1="44" y1="42" x2="30" y2="56"/>
+    <line x1="56" y1="42" x2="70" y2="56"/>
+    <!-- Mains -->
+    <circle cx="29" cy="57" r="2" fill="#1a4d8f" stroke="none"/>
+    <circle cx="71" cy="57" r="2" fill="#1a4d8f" stroke="none"/>
+    <!-- Jambes -->
+    <line x1="44" y1="76" x2="42" y2="92"/>
+    <line x1="56" y1="76" x2="58" y2="92"/>
+    <!-- Pieds -->
+    <line x1="38" y1="92" x2="44" y2="92" stroke-width="3"/>
+    <line x1="56" y1="92" x2="62" y2="92" stroke-width="3"/>
+  </g>
+</svg>`
+  },
+  {
+    id: 'player-boy',
+    name: 'Joueur',
+    desc: 'Personnage garçon — cheveux courts, tunique, traits stylo bleu',
+    svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" class="sprite-boy">
+  <defs>
+    <filter id="hd-boy" x="-5%" y="-5%" width="110%" height="110%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.025" numOctaves="2" seed="7"/>
+      <feDisplacementMap in="SourceGraphic" scale="1.4"/>
+    </filter>
+  </defs>
+  <g fill="none" stroke="#1a4d8f" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" filter="url(#hd-boy)">
+    <!-- Tête -->
+    <circle cx="50" cy="22" r="11"/>
+    <!-- Cheveux courts (calotte) -->
+    <path d="M 40 17 Q 42 11, 50 11 Q 58 11, 60 17 Q 56 14, 50 14 Q 44 14, 40 17 Z" fill="#1a4d8f"/>
+    <!-- Mèche -->
+    <path d="M 47 14 L 51 18" stroke-width="2"/>
+    <!-- Yeux -->
+    <circle cx="46" cy="23" r="0.9" fill="#1a4d8f" stroke="none"/>
+    <circle cx="54" cy="23" r="0.9" fill="#1a4d8f" stroke="none"/>
+    <!-- Sourire -->
+    <path d="M 46 28 Q 50 30, 54 28" stroke-width="1.6"/>
+    <!-- Cou -->
+    <line x1="50" y1="33" x2="50" y2="38"/>
+    <!-- Tunique (rectangle légèrement évasé) -->
+    <path d="M 38 38 L 34 70 L 66 70 L 62 38 Z" fill="#c8e0f0"/>
+    <!-- Col -->
+    <path d="M 46 38 L 50 42 L 54 38" stroke-width="1.6"/>
+    <!-- Bras -->
+    <line x1="40" y1="42" x2="28" y2="58"/>
+    <line x1="60" y1="42" x2="72" y2="58"/>
+    <!-- Mains -->
+    <circle cx="27" cy="59" r="2" fill="#1a4d8f" stroke="none"/>
+    <circle cx="73" cy="59" r="2" fill="#1a4d8f" stroke="none"/>
+    <!-- Jambes (pantalon) -->
+    <line x1="42" y1="70" x2="40" y2="92"/>
+    <line x1="58" y1="70" x2="60" y2="92"/>
+    <!-- Pieds -->
+    <line x1="36" y1="92" x2="44" y2="92" stroke-width="3"/>
+    <line x1="56" y1="92" x2="64" y2="92" stroke-width="3"/>
+  </g>
+</svg>`
+  },
+  {
+    id: 'sin-demon',
+    name: 'Péché',
+    desc: 'Petit démon rouge — cornes, sourcils froncés, ton enfantin (pas effrayant)',
+    svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" class="sprite-demon">
+  <defs>
+    <filter id="hd-demon" x="-5%" y="-5%" width="110%" height="110%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="11"/>
+      <feDisplacementMap in="SourceGraphic" scale="1.6"/>
+    </filter>
+  </defs>
+  <g filter="url(#hd-demon)">
+    <!-- Corps rond bouboule -->
+    <ellipse cx="50" cy="58" rx="22" ry="24" fill="#d63838" stroke="#8a1f1f" stroke-width="2.2"/>
+    <!-- Tête (légèrement distincte) -->
+    <circle cx="50" cy="38" r="18" fill="#d63838" stroke="#8a1f1f" stroke-width="2.2"/>
+    <!-- Cornes -->
+    <path d="M 38 24 L 34 10 L 44 22 Z" fill="#8a1f1f" stroke="#5a1010" stroke-width="1.8" stroke-linejoin="round"/>
+    <path d="M 62 24 L 66 10 L 56 22 Z" fill="#8a1f1f" stroke="#5a1010" stroke-width="1.8" stroke-linejoin="round"/>
+    <!-- Sourcils froncés (pas trop méchants) -->
+    <path d="M 40 32 L 47 35" stroke="#5a1010" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+    <path d="M 60 32 L 53 35" stroke="#5a1010" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+    <!-- Yeux ronds (kawaii / pas terrifiants) -->
+    <circle cx="44" cy="40" r="2.4" fill="#fdfdf6"/>
+    <circle cx="56" cy="40" r="2.4" fill="#fdfdf6"/>
+    <circle cx="44" cy="40.5" r="1.2" fill="#1a1a1a"/>
+    <circle cx="56" cy="40.5" r="1.2" fill="#1a1a1a"/>
+    <!-- Petite bouche en moue -->
+    <path d="M 45 47 Q 50 45, 55 47" stroke="#5a1010" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+    <!-- Bras courts -->
+    <path d="M 28 56 Q 22 60, 24 66" stroke="#8a1f1f" stroke-width="2.2" fill="#d63838" stroke-linecap="round"/>
+    <path d="M 72 56 Q 78 60, 76 66" stroke="#8a1f1f" stroke-width="2.2" fill="#d63838" stroke-linecap="round"/>
+    <!-- Petites pattes -->
+    <ellipse cx="42" cy="82" rx="5" ry="3" fill="#8a1f1f"/>
+    <ellipse cx="58" cy="82" rx="5" ry="3" fill="#8a1f1f"/>
+    <!-- Petite queue avec triangle -->
+    <path d="M 70 76 Q 80 78, 84 84" stroke="#8a1f1f" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+    <path d="M 82 82 L 88 82 L 84 87 Z" fill="#8a1f1f"/>
+  </g>
+</svg>`
+  },
+  {
+    id: 'good-light',
+    name: 'Bonne action',
+    desc: 'Être de lumière — silhouette dorée abstraite avec ailes et halo',
+    svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" class="sprite-light">
+  <defs>
+    <filter id="hd-light" x="-5%" y="-5%" width="110%" height="110%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.022" numOctaves="2" seed="2"/>
+      <feDisplacementMap in="SourceGraphic" scale="1.2"/>
+    </filter>
+    <radialGradient id="halo-grad" cx="50%" cy="45%" r="55%">
+      <stop offset="0%" stop-color="#fdfdf8" stop-opacity="0.95"/>
+      <stop offset="40%" stop-color="#f5e6a8" stop-opacity="0.7"/>
+      <stop offset="80%" stop-color="#e8b837" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#e8b837" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="body-grad" x1="50%" y1="0%" x2="50%" y2="100%">
+      <stop offset="0%" stop-color="#fdfdf8"/>
+      <stop offset="100%" stop-color="#f5e6a8"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Halo lumineux (sans filter pour rester doux) -->
+  <circle cx="50" cy="45" r="42" fill="url(#halo-grad)"/>
+
+  <g filter="url(#hd-light)">
+    <!-- Aile gauche (forme de pétale) -->
+    <path d="M 30 42
+             Q 12 38, 8 52
+             Q 12 60, 22 60
+             Q 28 56, 32 50 Z"
+          fill="#fdfdf8" stroke="#e8b837" stroke-width="2" stroke-linejoin="round"/>
+    <!-- Plumes aile gauche -->
+    <path d="M 16 48 Q 20 50, 24 52" stroke="#e8b837" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+    <path d="M 14 53 Q 18 55, 22 56" stroke="#e8b837" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+
+    <!-- Aile droite (miroir) -->
+    <path d="M 70 42
+             Q 88 38, 92 52
+             Q 88 60, 78 60
+             Q 72 56, 68 50 Z"
+          fill="#fdfdf8" stroke="#e8b837" stroke-width="2" stroke-linejoin="round"/>
+    <!-- Plumes aile droite -->
+    <path d="M 84 48 Q 80 50, 76 52" stroke="#e8b837" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+    <path d="M 86 53 Q 82 55, 78 56" stroke="#e8b837" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+
+    <!-- Silhouette centrale abstraite (forme de goutte / flamme inversée) -->
+    <path d="M 50 18
+             Q 42 28, 42 42
+             Q 42 58, 46 70
+             Q 48 78, 50 82
+             Q 52 78, 54 70
+             Q 58 58, 58 42
+             Q 58 28, 50 18 Z"
+          fill="url(#body-grad)" stroke="#e8b837" stroke-width="2" stroke-linejoin="round"/>
+
+    <!-- Trait central vertical (suggère élévation) -->
+    <line x1="50" y1="26" x2="50" y2="74" stroke="#e8b837" stroke-width="1" stroke-dasharray="2 3" opacity="0.6"/>
+
+    <!-- Petite étoile au sommet (point lumineux) -->
+    <circle cx="50" cy="14" r="2.5" fill="#fdfdf8" stroke="#e8b837" stroke-width="1.2"/>
+    <path d="M 50 9 L 50 19 M 45 14 L 55 14" stroke="#e8b837" stroke-width="0.8" stroke-linecap="round"/>
+  </g>
+</svg>`
+  }
+];
+
+/* ===========================================================
+   GÉNÉRATION DE LA GALERIE
+   =========================================================== */
+
+const SIZES = [32, 64, 128];
+const gallery = document.getElementById('gallery');
+
+SPRITES.forEach((sprite, index) => {
+  const card = document.createElement('article');
+  card.className = 'sprite-card';
+
+  // En-tête de la carte
+  const header = `
+    <h2><span class="num">${String(index + 1).padStart(2, '0')}</span> ${sprite.name}</h2>
+    <p class="desc">${sprite.desc}</p>
+  `;
+
+  // Grille des 3 tailles
+  let sizesHTML = '<div class="sizes-grid">';
+  SIZES.forEach(size => {
+    sizesHTML += `
+      <div class="size-cell">
+        <div class="preview" style="width:${size}px;height:${size}px">
+          ${sprite.svg.replace('<svg ', `<svg width="${size}" height="${size}" `)}
+        </div>
+        <div class="label">${size}px</div>
+      </div>
+    `;
+  });
+  sizesHTML += '</div>';
+
+  // Bloc de code
+  const escapedSvg = sprite.svg
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+
+  const codeBlock = `
+    <div class="code-block">
+      <button class="copy-btn" data-sprite-id="${sprite.id}">Copier</button>
+      <pre id="code-${sprite.id}">${escapedSvg}</pre>
+    </div>
+  `;
+
+  card.innerHTML = header + sizesHTML + codeBlock;
+  gallery.appendChild(card);
+});
+
+/* ===========================================================
+   COPIE DANS LE PRESSE-PAPIERS
+   =========================================================== */
+
+document.querySelectorAll('.copy-btn').forEach(btn => {
+  btn.addEventListener('click', async () => {
+    const spriteId = btn.dataset.spriteId;
+    const sprite = SPRITES.find(s => s.id === spriteId);
+    if (!sprite) return;
+
+    try {
+      await navigator.clipboard.writeText(sprite.svg);
+      const original = btn.textContent;
+      btn.textContent = '✓ Copié';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = original;
+        btn.classList.remove('copied');
+      }, 1500);
+    } catch (err) {
+      // Fallback : sélection du texte
+      const pre = document.getElementById(`code-${spriteId}`);
+      const range = document.createRange();
+      range.selectNode(pre);
+      window.getSelection().removeAllRanges();
+      window.getSelection().addRange(range);
+      btn.textContent = 'Sélectionné — Ctrl+C';
+    }
+  });
+});
+</script>
+
+</body>
+</html>
