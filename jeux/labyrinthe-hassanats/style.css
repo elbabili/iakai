@@ -622,6 +622,51 @@ em { font-style: normal; font-weight: 700; }
 }
 
 /* =============================================================
+   D-pad virtuel (mobile uniquement, monté en JS pendant la phase maze)
+   ============================================================= */
+.dpad {
+  position: fixed;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 160px;
+  height: 160px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: 4px;
+  z-index: 9998;
+  opacity: 0.6;
+  transition: opacity 0.2s ease;
+  pointer-events: auto;
+  touch-action: none;
+}
+.dpad-btn {
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  border-radius: 50%;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  box-shadow: 2px 2px 0 var(--shadow);
+  transition: transform 0.1s ease, opacity 0.1s ease, background 0.1s ease;
+}
+.dpad-btn:active {
+  transform: scale(0.92);
+  opacity: 1;
+  background: var(--gold-soft);
+}
+.dpad-up    { grid-column: 2; grid-row: 1; }
+.dpad-left  { grid-column: 1; grid-row: 2; }
+.dpad-right { grid-column: 3; grid-row: 2; }
+.dpad-down  { grid-column: 2; grid-row: 3; }
+
+
+/* =============================================================
    Responsive
    ============================================================= */
 @media (max-width: 800px) {
@@ -632,4 +677,24 @@ em { font-style: normal; font-weight: 700; }
   .character-card svg.character-preview { width: 96px; height: 96px; }
   .rules { font-size: 1.05rem; }
   .maze-svg { max-height: 70vh; }
+}
+
+@media (max-width: 600px) {
+  body::before { display: none; }
+  body { font-size: 16px; }
+  .hand-title { font-size: 2.4rem; }
+
+  .hud { font-size: 0.95rem; gap: 0.35rem; padding: 0.3rem 0.4rem 0.45rem; }
+  .hud-item { padding: 0.18rem 0.55rem; }
+  .hud-progress { font-size: 1.05rem; }
+  .hud-protect-bar { width: 56px; }
+  .maze-back-btn { font-size: 0.95rem; padding: 0.15rem 0.5rem; }
+
+  .maze-svg { max-height: 65vh; }
+  .maze-screen { padding-bottom: 200px; }
+
+  .rules { font-size: 0.95rem; }
+  .rules li { flex-wrap: wrap; }
+
+  .dpad { width: 144px; height: 144px; bottom: 12px; }
 }

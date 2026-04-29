@@ -17,6 +17,13 @@
 
 
 /* ==========================================================================
+   Détection tactile (active swipe + D-pad + tutoriel mobile)
+   ========================================================================== */
+const IS_TOUCH = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+if (IS_TOUCH) document.documentElement.classList.add('is-touch');
+
+
+/* ==========================================================================
    CONFIG
    ========================================================================== */
 const CONFIG = {
@@ -184,12 +191,12 @@ function showIntro() {
     </svg>
   `;
 
-  document.getElementById('game').innerHTML = `
-    <div class="screen intro-screen">
-      <h1 class="hand-title">Comment jouer</h1>
-      <div class="intro-card">
-        <ul class="rules">
-          <li>
+  const directionRule = IS_TOUCH
+    ? `<li>
+            <span class="rule-icon"><svg viewBox="0 0 100 100"><use href="#${state.character}"/></svg></span>
+            <span>Glisse ton doigt pour changer de direction (ou utilise les flèches en bas)</span>
+          </li>`
+    : `<li>
             <span class="rule-icon"><svg viewBox="0 0 100 100"><use href="#${state.character}"/></svg></span>
             <span class="rule-keys">
               <span class="key">←</span><span class="key">↑</span><span class="key">↓</span><span class="key">→</span>
@@ -197,7 +204,14 @@ function showIntro() {
               <span class="key">Z</span><span class="key">Q</span><span class="key">S</span><span class="key">D</span>
             </span>
             <span style="margin-left:0.5rem">— change de direction</span>
-          </li>
+          </li>`;
+
+  document.getElementById('game').innerHTML = `
+    <div class="screen intro-screen">
+      <h1 class="hand-title">Comment jouer</h1>
+      <div class="intro-card">
+        <ul class="rules">
+          ${directionRule}
           <li>
             <span class="rule-icon">${dotIcon}</span>
             <span>Points dorés = <em>hassanats</em> à collecter</span>
@@ -308,12 +322,18 @@ function startMaze() {
   renderMazeScreen();
   document.addEventListener('keydown', onKeyDown);
   document.addEventListener('keyup',   onKeyUp);
+  if (IS_TOUCH) {
+    setupTouchControls();
+    mountDPad();
+  }
   requestAnimationFrame(mazeLoop);
 }
 
 function teardownMaze() {
   document.removeEventListener('keydown', onKeyDown);
   document.removeEventListener('keyup',   onKeyUp);
+  teardownTouchControls();
+  unmountDPad();
 }
 
 
@@ -614,6 +634,7 @@ function handleDemonHit(now, demon) {
   m.player.moveStartTime = now;
   spawnToast(m.player.prevCell.x, m.player.prevCell.y, `−${lost || CONFIG.hassanatPenalty}`, '#d63838');
   sfx.hit();
+  if (navigator.vibrate) navigator.vibrate(50);
   updateHud();
 }
 
@@ -1049,6 +1070,101 @@ function sunRays(cx, cy, r) {
     out += `<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" class="sun-ray"/>`;
   }
   return out;
+}
+
+
+/* ==========================================================================
+   Contrôles tactiles : swipe sur la zone de jeu + D-pad virtuel
+   Tous deux appellent setPlayerInputDir() — la même fonction que le clavier.
+   ========================================================================== */
+const SWIPE_MIN_PX = 30;
+const SWIPE_MAX_MS = 600;
+let touchStartX = 0, touchStartY = 0, touchStartT = 0;
+
+function onTouchStart(e) {
+  if (state.phase !== 'maze' || !e.touches || e.touches.length !== 1) return;
+  const t = e.touches[0];
+  touchStartX = t.clientX;
+  touchStartY = t.clientY;
+  touchStartT = performance.now();
+  e.preventDefault();
+}
+function onTouchEnd(e) {
+  if (state.phase !== 'maze') return;
+  const t = (e.changedTouches && e.changedTouches[0]);
+  if (!t) return;
+  const dx = t.clientX - touchStartX;
+  const dy = t.clientY - touchStartY;
+  const dt = performance.now() - touchStartT;
+  if (dt > SWIPE_MAX_MS) return;
+  const adx = Math.abs(dx), ady = Math.abs(dy);
+  if (Math.max(adx, ady) < SWIPE_MIN_PX) return;
+  const dir = (adx > ady)
+    ? { x: dx > 0 ?  1 : -1, y: 0 }
+    : { x: 0, y: dy > 0 ?  1 : -1 };
+  setPlayerInputDir(dir);
+}
+function setupTouchControls() {
+  const svg = document.querySelector('.maze-svg');
+  if (!svg) return;
+  svg.addEventListener('touchstart', onTouchStart, { passive: false });
+  svg.addEventListener('touchend',   onTouchEnd,   { passive: false });
+}
+function teardownTouchControls() {
+  const svg = document.querySelector('.maze-svg');
+  if (!svg) return;
+  svg.removeEventListener('touchstart', onTouchStart);
+  svg.removeEventListener('touchend',   onTouchEnd);
+}
+
+const DPAD_PATHS = {
+  up:    'M 24 36 L 24 14 M 14 22 L 24 12 L 34 22',
+  down:  'M 24 12 L 24 34 M 14 26 L 24 36 L 34 26',
+  left:  'M 36 24 L 14 24 M 22 14 L 12 24 L 22 34',
+  right: 'M 12 24 L 34 24 M 26 14 L 36 24 L 26 34',
+};
+const DPAD_DIRS = {
+  up:    { x:  0, y: -1 },
+  down:  { x:  0, y:  1 },
+  left:  { x: -1, y:  0 },
+  right: { x:  1, y:  0 },
+};
+
+function dpadArrowSvg(d) {
+  return `<svg viewBox="0 0 48 48" width="36" height="36" aria-hidden="true">
+    <g filter="url(#hand-drawn)" stroke="#1a4d8f" stroke-width="3.5" fill="none"
+       stroke-linecap="round" stroke-linejoin="round">
+      <path d="${DPAD_PATHS[d]}"/>
+    </g>
+  </svg>`;
+}
+
+function mountDPad() {
+  if (document.getElementById('dpad')) return;
+  const dpad = document.createElement('div');
+  dpad.id = 'dpad';
+  dpad.className = 'dpad';
+  dpad.setAttribute('aria-label', 'Commandes du jeu');
+  dpad.innerHTML = `
+    <button class="dpad-btn dpad-up"    data-dir="up"    aria-label="Haut">${dpadArrowSvg('up')}</button>
+    <button class="dpad-btn dpad-left"  data-dir="left"  aria-label="Gauche">${dpadArrowSvg('left')}</button>
+    <button class="dpad-btn dpad-right" data-dir="right" aria-label="Droite">${dpadArrowSvg('right')}</button>
+    <button class="dpad-btn dpad-down"  data-dir="down"  aria-label="Bas">${dpadArrowSvg('down')}</button>
+  `;
+  document.body.appendChild(dpad);
+  dpad.querySelectorAll('.dpad-btn').forEach(btn => {
+    const fire = (e) => {
+      e.preventDefault();
+      const d = DPAD_DIRS[btn.dataset.dir];
+      if (d) setPlayerInputDir(d);
+    };
+    btn.addEventListener('touchstart', fire, { passive: false });
+    btn.addEventListener('mousedown',  fire);
+  });
+}
+function unmountDPad() {
+  const el = document.getElementById('dpad');
+  if (el) el.remove();
 }
 
 
