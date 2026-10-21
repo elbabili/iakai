@@ -968,3 +968,39 @@ footer {
 .legal-content p { margin-bottom: 1rem; }
 .legal-content ul { margin: 0 0 1rem 1.5rem; }
 .legal-content strong { color: var(--blanc-lumiere); font-weight: 600; }
+
+/* ═══ Fond : l'espace (oct. 2026) ═══ */
+
+body {
+    background: #05080a;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background:
+        linear-gradient(rgba(5, 8, 10, 0.25), rgba(5, 8, 10, 0.4)),
+        url('images/espace.webp') center / cover no-repeat;
+    pointer-events: none;
+}
+
+@media (max-width: 768px) {
+    body::before {
+        background:
+            linear-gradient(rgba(5, 8, 10, 0.25), rgba(5, 8, 10, 0.4)),
+            url('images/espace-mobile.webp') center / cover no-repeat;
+    }
+}
+
+body { text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7); }
+
+/* Grands écrans et écrans haute densité : version 4K du fond */
+@media (min-width: 2200px), (min-width: 1400px) and (min-resolution: 1.5dppx) {
+    body::before {
+        background:
+            linear-gradient(rgba(5, 8, 10, 0.25), rgba(5, 8, 10, 0.4)),
+            url('images/espace-4k.webp') center / cover no-repeat;
+    }
+}

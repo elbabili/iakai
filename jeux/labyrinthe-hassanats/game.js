@@ -1009,6 +1009,8 @@ function showParadise() {
           <button class="big-btn" id="restart-btn">Recommencer</button>
           <button class="big-btn btn-secondary" id="select-btn">Changer de perso</button>
         </div>
+        <p class="iakai-support">Ce jeu t'a plu ? Il est gratuit et le restera.
+          <a href="https://www.paypal.com/donate/?hosted_button_id=5Z2GCGQ97V3FN" target="_blank" rel="noopener noreferrer">Soutenir IAKAI</a></p>
       </div>
     </div>
   `;

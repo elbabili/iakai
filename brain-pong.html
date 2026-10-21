@@ -22,9 +22,9 @@
     <style>
         *{margin:0;padding:0;box-sizing:border-box}
         :root{--fond:#2e2820;--fond-card:#3a332a;--or:#e0c85a;--or-dim:#a08830;--vert:#5ac878;--rouge:#d94f4f;--blanc:#f5f1e8;--gris:#8a8278}
-        body{background:var(--fond);color:var(--blanc);font-family:'Space Mono',monospace;overflow:hidden;height:100vh;width:100vw;touch-action:none;-webkit-user-select:none;user-select:none}
+        body{background:#05080a;background:linear-gradient(rgba(5,8,10,.3),rgba(5,8,10,.45)),url('images/espace.webp') center/cover no-repeat fixed;color:var(--blanc);font-family:'Space Mono',monospace;overflow:hidden;height:100vh;width:100vw;touch-action:none;-webkit-user-select:none;user-select:none}
 
-        #startScreen{position:fixed;inset:0;z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--fond);transition:opacity .6s}
+        #startScreen{position:fixed;inset:0;z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(5,8,10,.55);transition:opacity .6s}
         #startScreen.hidden{opacity:0;pointer-events:none}
         .start-logo{font-family:'Cormorant Garamond',serif;font-size:3.5rem;font-weight:300;letter-spacing:.3em;color:var(--or);text-transform:uppercase;margin-bottom:.3rem}
         .start-subtitle{font-family:'Cormorant Garamond',serif;font-size:1rem;color:var(--gris);letter-spacing:.2em;margin-bottom:3rem;font-style:italic}
@@ -61,7 +61,7 @@
         .feedback-flash.show{opacity:1;transform:translate(-50%,-60%)}
         .feedback-flash.correct{color:var(--vert)}.feedback-flash.wrong{color:var(--rouge)}
 
-        #gameOver{position:fixed;inset:0;z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(46,40,32,.95);opacity:0;visibility:hidden;transition:all .5s}
+        #gameOver{position:fixed;inset:0;z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(5,8,10,.82);opacity:0;visibility:hidden;transition:all .5s}
         #gameOver.visible{opacity:1;visibility:visible}
         .gameover-title{font-family:'Cormorant Garamond',serif;font-size:2.5rem;font-weight:300;color:var(--or);letter-spacing:.2em;margin-bottom:1.5rem}
         .gameover-stats{font-size:.75rem;color:var(--gris);letter-spacing:.15em;line-height:2.2;text-align:center;margin-bottom:2rem}
@@ -72,6 +72,7 @@
         .nav-back:hover{color:var(--or);opacity:1}
 
         @media(max-width:600px){.start-logo{font-size:2.5rem}.score{font-size:1.4rem}.qbar-text{font-size:.9rem}.qbar-btn{font-size:.65rem;padding:.5rem .6rem}}
+            .iakai-support{margin-top:1.6rem;font-family:'Cormorant Garamond',Georgia,serif;font-size:1rem;font-style:italic;color:#bfb9ae;text-align:center;line-height:1.6}.iakai-support a{color:#e0c85a;font-style:normal;white-space:nowrap}
     </style>
 </head>
 <body>
@@ -116,6 +117,7 @@
     <div class="gameover-stats" id="goStats"></div>
     <button class="start-btn" id="btnReplay">REJOUER</button>
     <a href="apps.html" class="back-link">← Retour à IAKAI</a>
+    <p class="iakai-support">Ce jeu t'a plu ? Il est gratuit et le restera. <a href="https://www.paypal.com/donate/?hosted_button_id=5Z2GCGQ97V3FN" target="_blank" rel="noopener noreferrer">Soutenir IAKAI</a></p>
 </div>
 
 <script>

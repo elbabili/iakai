@@ -698,3 +698,7 @@ em { font-style: normal; font-weight: 700; }
 
   .dpad { width: 144px; height: 144px; bottom: 12px; }
 }
+
+/* Soutien IAKAI (écran de victoire) */
+.iakai-support { margin-top: 1rem; font-size: 1.05rem; color: var(--ink); text-align: center; }
+.iakai-support a { color: inherit; font-weight: bold; text-decoration: underline; white-space: nowrap; }

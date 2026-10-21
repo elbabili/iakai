@@ -30,7 +30,7 @@
         }
         html{scroll-behavior:smooth}
         body{
-            min-height:100vh;background:var(--fond);color:var(--blanc);
+            min-height:100vh;background:#05080a;background:linear-gradient(rgba(5,8,10,.3),rgba(5,8,10,.45)),url('images/espace.webp') center/cover no-repeat fixed;color:var(--blanc);
             font-family:'Cormorant Garamond',Georgia,serif;overflow-x:hidden;
         }
 
@@ -206,6 +206,7 @@
             .count-selector{flex-wrap:wrap;justify-content:center}
             .action-buttons{flex-direction:column}
         }
+            .iakai-support{margin-top:1.6rem;font-family:'Cormorant Garamond',Georgia,serif;font-size:1rem;font-style:italic;color:#bfb9ae;text-align:center;line-height:1.6}.iakai-support a{color:#e0c85a;font-style:normal;white-space:nowrap}
     </style>
 </head>
 <body>
@@ -310,6 +311,7 @@
             <button id="retry-btn" class="action-btn primary" onclick="retry()">&#128260; Recommencer</button>
             <button class="action-btn secondary" onclick="goHome()">&#127968; Accueil</button>
         </div>
+        <p class="iakai-support">Ce quiz t'a aidé ? Il est gratuit et le restera. <a href="https://www.paypal.com/donate/?hosted_button_id=5Z2GCGQ97V3FN" target="_blank" rel="noopener noreferrer">Soutenir IAKAI</a></p>
     </div>
 </div>
 
