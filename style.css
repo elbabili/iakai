@@ -932,3 +932,39 @@ footer {
         font-size: 0.9rem;
     }
 }
+
+/* ═══ Intro de page, mentions légales, accueil (oct. 2026) ═══ */
+
+.page-intro {
+    max-width: 640px;
+    margin: -2rem auto 3rem;
+    text-align: center;
+    font-size: 1.15rem;
+    line-height: 1.7;
+    color: var(--gris-clair);
+}
+
+.page-intro a, .legal-content a { color: var(--or-lumiere); }
+
+.coming-soon .page-intro { margin: 2rem auto 0; }
+
+.home-navigation .home-card:last-child:nth-child(odd) { grid-column: 1 / -1; }
+
+.legal-content {
+    max-width: 720px;
+    margin: 0 auto 4rem;
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: var(--gris-clair);
+}
+
+.legal-content h2 {
+    font-weight: 400;
+    font-size: 1.5rem;
+    color: var(--blanc-lumiere);
+    margin: 2.5rem 0 0.8rem;
+}
+
+.legal-content p { margin-bottom: 1rem; }
+.legal-content ul { margin: 0 0 1rem 1.5rem; }
+.legal-content strong { color: var(--blanc-lumiere); font-weight: 600; }

@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /jeux/labyrinthe-hassanats/sprites-preview.html
+
+Sitemap: https://iakai.fr/sitemap.xml

@@ -29,6 +29,9 @@
 
    ═══════════════════════════════════════════ */
 
+// Changer cette valeur après chaque mise à jour des fichiers JSON
+const DATA_VERSION = '2026-10-21';
+
 document.addEventListener('DOMContentLoaded', () => {
     initHamburger();
 

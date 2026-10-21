@@ -1,41 +1,45 @@
 [
     {
-        "file": "ep01_fiha_khayr.jpg",
+        "file": "ep01_fiha_khayr.webp",
         "title_ar": "فيها خير",
         "title_tr": "Fīhā Khayr",
         "title_en": "There Is Always A Good",
-        "date": "2026-02-11"
+        "date": "2026-02-11",
+        "title_fr": "Il y a du bien en toute chose"
     },
     {
-        "file": "ep02_al_qanaa.jpg",
+        "file": "ep02_al_qanaa.webp",
         "title_ar": "القناعة",
         "title_tr": "Al Qanā'a",
         "title_en": "Be Content With What You Have",
-        "date": "2026-02-12"
+        "date": "2026-02-12",
+        "title_fr": "Se contenter de ce que l'on a"
     },
     {
-        "file": "ep03_as_sabr_wa_ath_thiqa.jpg",
+        "file": "ep03_as_sabr_wa_ath_thiqa.webp",
         "title_ar": "الصبر والثقة",
         "title_tr": "As-Sabr wa Ath-Thiqa",
         "title_en": "Patience & Self-Trust",
-        "date": "2026-02-13"
+        "date": "2026-02-13",
+        "title_fr": "Patience et confiance"
     },
     {
-        "file": "ep04_ad_dua.jpg",
+        "file": "ep04_ad_dua.webp",
         "title_ar": "الدعاء",
         "title_tr": "Ad-Du'ā'",
         "title_en": "The Power of Prayer",
-        "date": "2026-02-14"
+        "date": "2026-02-14",
+        "title_fr": "La force de l'invocation"
     },
     {
-        "file": "ep05_ramadan_deux_chemins.jpg",
+        "file": "ep05_ramadan_deux_chemins.webp",
         "title_ar": "رمضان بين طريقين",
         "title_tr": "Ramaḍān bayn Ṭarīqayn",
         "title_fr": "Ramadan, deux chemins",
         "date": "2026-02-16"
     },
     {
-        "file": "ep06_hosnu_dzon.jpg",
+        "file": "ep06_hosnu_dzon.webp",
         "title_ar": "حسن الظن",
         "title_tr": "Ḥusnu Aẓ-Ẓann",
         "title_fr": "Le bon soupçon",
