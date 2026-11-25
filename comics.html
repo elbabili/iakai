@@ -14,12 +14,12 @@
     <meta property="og:title" content="IAKAI — BD">
     <meta property="og:description" content="Des bandes dessinées muettes aux bulles vides, à compléter au crayon en famille, et Les Porteurs de Lumière, une BD de super-héros portés par la foi et la force du bien.">
     <meta property="og:url" content="https://iakai.fr/comics.html">
-    <meta property="og:image" content="https://iakai.fr/images/muettes/ep01_fiha_khayr.jpg">
+    <meta property="og:image" content="https://iakai.fr/images/porteurs/porteurs_t1_p01.jpg">
     <meta name="twitter:card" content="summary_large_image">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=2026-11-25">
+    <link rel="stylesheet" href="style.css?v=2026-11-25b">
 </head>
 <body data-page="comics">
     <div class="rainbow-overlay"></div>
@@ -51,25 +51,28 @@
             <h1 class="site-subtitle">BD</h1>
         </header>
 
-        <p class="page-intro">Des histoires muettes, sans un mot : les bulles sont vides, à vous de les remplir. Prenez un crayon et inventez les dialogues en famille. Six épisodes à découvrir : <em>Fīhā Khayr</em> (il y a du bien en toute chose), <em>Al-Qanā'a</em> (se contenter de ce que l'on a), <em>As-Sabr wa Ath-Thiqa</em> (patience et confiance), <em>Ad-Du'ā'</em> (la force de l'invocation), <em>Ramadan, deux chemins</em> et <em>Ḥusnu Aẓ-Ẓann</em> (le bon soupçon).</p>
-
-        <div class="comic-series" data-source="comics.json" data-folder="images/muettes/" data-label="Épisode">
-            <div class="carousel-wrapper">
-                <button class="carousel-arrow carousel-prev" aria-label="Précédent">&#8249;</button>
-                <div class="carousel-viewport">
-                    <div class="carousel-track"></div>
-                </div>
-                <button class="carousel-arrow carousel-next" aria-label="Suivant">&#8250;</button>
-            </div>
-            <div class="carousel-indicators"></div>
-        </div>
-
-        <section class="comic-section comic-section--porteurs" aria-labelledby="porteurs-title">
-            <div class="comic-section-divider" aria-hidden="true"></div>
+        <section class="comic-section comic-section--porteurs comic-section--first" aria-labelledby="porteurs-title">
             <h2 class="comic-section-title" id="porteurs-title">Les Porteurs de Lumière</h2>
             <p class="comic-section-subtitle">Tome 1 — L'Éveil</p>
             <p class="page-intro comic-section-intro">Des super-héros pas comme les autres : leur pouvoir naît de la foi qui illumine leur cœur et de la force du bien qui les pousse à aimer. Yanis, jeune étudiant infirmier, est agressé un soir par trois hommes poussés par des ombres invisibles, les Murmureurs. À terre, il doit choisir entre la vengeance et la lumière… Neuf planches sur la haine, le pardon et le courage de rester bon.</p>
             <div class="comic-series" data-source="porteurs.json" data-folder="images/porteurs/" data-label="Planche">
+                <div class="carousel-wrapper">
+                    <button class="carousel-arrow carousel-prev" aria-label="Précédent">&#8249;</button>
+                    <div class="carousel-viewport">
+                        <div class="carousel-track"></div>
+                    </div>
+                    <button class="carousel-arrow carousel-next" aria-label="Suivant">&#8250;</button>
+                </div>
+                <div class="carousel-indicators"></div>
+            </div>
+        </section>
+
+        <section class="comic-section comic-section--muettes" aria-labelledby="muettes-title">
+            <div class="comic-section-divider" aria-hidden="true"></div>
+            <h2 class="comic-section-title" id="muettes-title">Histoires muettes</h2>
+            <p class="comic-section-subtitle">Six épisodes à compléter en famille</p>
+            <p class="page-intro comic-section-intro">Des histoires muettes, sans un mot : les bulles sont vides, à vous de les remplir. Prenez un crayon et inventez les dialogues en famille. Six épisodes à découvrir : <em>Fīhā Khayr</em> (il y a du bien en toute chose), <em>Al-Qanā'a</em> (se contenter de ce que l'on a), <em>As-Sabr wa Ath-Thiqa</em> (patience et confiance), <em>Ad-Du'ā'</em> (la force de l'invocation), <em>Ramadan, deux chemins</em> et <em>Ḥusnu Aẓ-Ẓann</em> (le bon soupçon).</p>
+            <div class="comic-series" data-source="comics.json" data-folder="images/muettes/" data-label="Épisode">
                 <div class="carousel-wrapper">
                     <button class="carousel-arrow carousel-prev" aria-label="Précédent">&#8249;</button>
                     <div class="carousel-viewport">
@@ -95,6 +98,6 @@
 
     </main>
 
-    <script src="script.js?v=2026-11-25"></script>
+    <script src="script.js?v=2026-11-25b"></script>
 </body>
 </html>

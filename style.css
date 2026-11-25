@@ -585,6 +585,10 @@ body {
     text-align: center;
 }
 
+.comic-section--first {
+    margin-top: 0;
+}
+
 .comic-section-divider {
     width: 120px;
     height: 1px;
