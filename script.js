@@ -5,9 +5,13 @@
 
    STRUCTURE DES FICHIERS :
    ────────────────────────
-   images/          → toutes les images (dessins + BD)
+   images/          → dessins et peintures
+   images/muettes/  → planches BD « histoires muettes » (comics.json)
+   images/porteurs/ → planches BD « Les Porteurs de Lumière » (porteurs.json)
+   Le dossier de chaque série est indiqué par data-folder dans comics.html.
    images.json      → liste des dessins/peintures
-   comics.json      → liste des épisodes BD
+   comics.json      → liste des épisodes BD (histoires muettes)
+   porteurs.json    → planches BD « Les Porteurs de Lumière »
    videos.json      → liste des vidéos (quand prêt)
 
    DESSINS (images.json) :
@@ -37,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const page = document.body.dataset.page;
     if (page === 'dessins') initGallery();
-    if (page === 'comics')  initComicsCarousel();
+    if (page === 'comics')  initComicsCarousels();
     if (page === 'videos')  initVideoGallery();
 });
 
@@ -116,21 +120,39 @@ async function initGallery() {
     }
 }
 
-/* ═══ Carrousel BD ═══ */
+/* ═══ Carrousels BD ═══
+   Chaque bloc <div class="comic-series" data-source="xxx.json"> de comics.html
+   devient un carrousel indépendant (comics.json, porteurs.json…).
+   Les flèches du clavier pilotent le dernier carrousel survolé ou touché. */
 
-async function initComicsCarousel() {
-    const track = document.getElementById('carouselTrack');
-    const viewport = document.getElementById('carouselViewport');
-    const indicators = document.getElementById('carouselIndicators');
-    const prevBtn = document.getElementById('carouselPrev');
-    const nextBtn = document.getElementById('carouselNext');
+let activeComicCarousel = null;
+
+function initComicsCarousels() {
+    const series = document.querySelectorAll('.comic-series[data-source]');
+    series.forEach((el, i) => initComicsCarousel(el, i === 0));
+
+    document.addEventListener('keydown', (e) => {
+        if (!activeComicCarousel) return;
+        if (e.key === 'ArrowLeft') activeComicCarousel.goTo(activeComicCarousel.index() - 1);
+        if (e.key === 'ArrowRight') activeComicCarousel.goTo(activeComicCarousel.index() + 1);
+    });
+}
+
+async function initComicsCarousel(root, isDefault) {
+    const track = root.querySelector('.carousel-track');
+    const viewport = root.querySelector('.carousel-viewport');
+    const indicators = root.querySelector('.carousel-indicators');
+    const prevBtn = root.querySelector('.carousel-prev');
+    const nextBtn = root.querySelector('.carousel-next');
+    const label = root.dataset.label || 'Épisode';
+    const folder = root.dataset.folder || 'images/';
     if (!track) return;
 
     let currentIndex = 0;
     let episodes = [];
 
     try {
-        const res = await fetch('comics.json?' + Date.now());
+        const res = await fetch(root.dataset.source + '?' + Date.now());
         if (!res.ok) throw new Error('introuvable');
         episodes = await res.json();
     } catch (err) {
@@ -143,14 +165,14 @@ async function initComicsCarousel() {
         return;
     }
 
-    episodes.sort((a, b) => new Date(a.date) - new Date(b.date));
+    episodes.sort((a, b) => (new Date(a.date) - new Date(b.date)) || ((a.order || 0) - (b.order || 0)));
 
     episodes.forEach((ep, i) => {
         const slide = document.createElement('div');
         slide.className = 'carousel-slide';
 
         const img = document.createElement('img');
-        img.src = `images/${ep.file}`;
+        img.src = `${folder}${ep.file}`;
         img.alt = ep.title_fr || ep.title_en || ep.file;
         img.loading = i === 0 ? 'eager' : 'lazy';
         img.addEventListener('click', () => openLightbox(img.src, img.alt));
@@ -162,7 +184,7 @@ async function initComicsCarousel() {
     episodes.forEach((_, i) => {
         const dot = document.createElement('button');
         dot.className = 'carousel-dot' + (i === 0 ? ' active' : '');
-        dot.setAttribute('aria-label', `Épisode ${i + 1}`);
+        dot.setAttribute('aria-label', `${label} ${i + 1}`);
         dot.addEventListener('click', () => goTo(i));
         indicators.appendChild(dot);
     });
@@ -175,19 +197,30 @@ async function initComicsCarousel() {
         nextBtn.disabled = currentIndex === episodes.length - 1;
     }
 
+    // La hauteur du carrousel suit la planche affichée (formats paysage et portrait mélangés)
+    function fitHeight() {
+        const slide = track.children[currentIndex];
+        if (slide && slide.offsetHeight) viewport.style.height = slide.offsetHeight + 'px';
+    }
+
     function goTo(index) {
         currentIndex = Math.max(0, Math.min(index, episodes.length - 1));
         track.style.transform = `translateX(-${currentIndex * 100}%)`;
         updateState();
+        fitHeight();
     }
+
+    track.querySelectorAll('img').forEach((img) => img.addEventListener('load', fitHeight));
+    window.addEventListener('resize', fitHeight);
+
+    const api = { goTo, index: () => currentIndex };
+    if (isDefault && !activeComicCarousel) activeComicCarousel = api;
+    ['mouseenter', 'touchstart', 'focusin'].forEach((evt) => {
+        root.addEventListener(evt, () => { activeComicCarousel = api; }, { passive: true });
+    });
 
     prevBtn.addEventListener('click', () => goTo(currentIndex - 1));
     nextBtn.addEventListener('click', () => goTo(currentIndex + 1));
-
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'ArrowLeft') goTo(currentIndex - 1);
-        if (e.key === 'ArrowRight') goTo(currentIndex + 1);
-    });
 
     let touchStartX = 0;
     const swipeThreshold = 50;

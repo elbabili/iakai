@@ -578,6 +578,65 @@ body {
     display: none;
 }
 
+/* ═══ Sections BD distinctes (nov. 2026) ═══ */
+
+.comic-section {
+    margin-top: 5rem;
+    text-align: center;
+}
+
+.comic-section-divider {
+    width: 120px;
+    height: 1px;
+    margin: 0 auto 3rem;
+    background: linear-gradient(90deg, transparent, var(--or-lumiere), transparent);
+}
+
+.comic-section-title {
+    font-weight: 300;
+    font-size: 2.2rem;
+    letter-spacing: 0.12em;
+    color: var(--or-lumiere);
+    text-shadow: 0 0 24px rgba(224, 200, 90, 0.35);
+}
+
+.comic-section-subtitle {
+    margin-top: 0.4rem;
+    font-size: 1.1rem;
+    font-style: italic;
+    color: var(--gris-clair);
+}
+
+.comic-section .comic-section-intro {
+    margin: 1.5rem auto 2.5rem;
+}
+
+.comic-section--porteurs .comic-series {
+    max-width: 760px;
+}
+
+.comic-section--porteurs .carousel-viewport {
+    border-color: rgba(224, 200, 90, 0.3);
+    box-shadow: 0 0 40px rgba(224, 200, 90, 0.08);
+    transition: height 0.4s ease;
+}
+
+.comic-section--porteurs .carousel-track {
+    align-items: flex-start;
+}
+
+.comic-section--porteurs .carousel-slide img {
+    width: auto;
+    max-height: 85vh;
+    margin: 0 auto;
+}
+
+@media (max-width: 600px) {
+    .comic-section { margin-top: 3.5rem; }
+    .comic-section-title { font-size: 1.7rem; letter-spacing: 0.08em; }
+    .comic-section--porteurs .comic-series { max-width: 100%; }
+}
+
 /* ═══ Vidéos ═══ */
 
 .video-gallery {
