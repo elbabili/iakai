@@ -1,0 +1,52 @@
+name: Déploiement iakai.fr (OVH)
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:        # bouton "Run workflow" pour relancer à la main
+
+concurrency:
+  group: deploy-ovh
+  cancel-in-progress: false # jamais deux déploiements en même temps
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Récupérer le code
+        uses: actions/checkout@v4
+
+      - name: Préparer Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Générer les .webp manquants à partir des .jpg
+        run: |
+          pip install --quiet pillow
+          python - <<'PY'
+          from pathlib import Path
+          from PIL import Image
+          for jpg in Path('images').rglob('*.jpg'):
+              webp = jpg.with_suffix('.webp')
+              if webp.exists():
+                  continue
+              im = Image.open(jpg).convert('RGB')
+              im.thumbnail((1600, 1600), Image.LANCZOS)
+              im.save(webp, 'WEBP', quality=85)
+              print(f'créé : {webp}')
+          PY
+
+      - name: Envoyer sur OVH par FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ftp.cluster121.hosting.ovh.net
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftps
+          server-dir: /www/
+          exclude: |
+            **/.git*
+            **/.git*/**
+            .github/**
+            README.md
